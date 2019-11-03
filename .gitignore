@@ -6,3 +6,5 @@
 /.vs/szedarserver
 /szedarserver.Api/obj
 /szedarserver.Infrastructure/obj
+*.dll
+/bin

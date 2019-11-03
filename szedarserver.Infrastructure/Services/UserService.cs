@@ -11,6 +11,10 @@ using szedarserver.Core.Domain;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using szedarserver.Infrastructure.Models;
+using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace szedarserver.Infrastructure.Services
 {
@@ -18,7 +22,7 @@ namespace szedarserver.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -28,7 +32,26 @@ namespace szedarserver.Infrastructure.Services
         {
             user.Password = HashExtension.HashPassword(user.Password);
             var User = await _userRepository.GetUserAsync(_mapper.Map<User>(user));
+            if(User == null)
+            {
+                return null;
+            }
             var accout = _mapper.Map<AccountDTO>(User);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("testbfdgdgtestbfdgdgtestbfdgdgtestbfdgdg");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, accout.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            accout.Token = tokenHandler.WriteToken(token);
+
             return accout;
 
         }
