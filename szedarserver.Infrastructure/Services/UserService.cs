@@ -46,6 +46,19 @@ namespace szedarserver.Infrastructure.Services
 
         }
 
+        public async Task<AccountDTO> LoginFbAsync(FbUserModel user)
+        {
+            var userFromDb = await _userRepository.GetUserByFbIdAsync(user.FbId);
+            if (userFromDb == null)
+            {
+                var newFbUser = new User(user.Email, user.Login, user.FbId, "");
+                await _userRepository.AddUserAsync(newFbUser);
+            }
+            var account = _mapper.Map<AccountDTO>(userFromDb);
+            account.Token = _jwtExtension.CreateToken(account.Id);
+            return account;
+        }
+
         public async Task RegisterAsync(UserRegisterModel _user)
         {
             var user = await _userRepository.GetByEmailAsync(_user.Email);
@@ -57,6 +70,11 @@ namespace szedarserver.Infrastructure.Services
             if(user != null)
             {
                 throw new ValidationException("Email already exists");
+            }
+
+            if (user.Password.Length < 4)
+            {
+                throw new ValidationException("Password too short");
             }
             user = new User(_user.Email, HashExtension.HashPassword(_user.Password), _user.Login);
             await _userRepository.AddUserAsync(user);
