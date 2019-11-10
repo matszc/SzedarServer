@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +19,10 @@ using szedarserver.Infrastructure.Services;
 using szedarserver.Core.IRepositories;
 using szedarserver.Core.Repositories;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
+using szedarserver.Infrastructure.Extensions;
 using szedarserver.Infrastructure.MappingProfile;
+using szedarserver.Infrastructure.Setting;
 
 namespace szedarserver.Api
 {
@@ -27,6 +32,7 @@ namespace szedarserver.Api
         {
             Configuration = configuration;
         }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public IConfiguration Configuration { get; }
 
@@ -35,6 +41,7 @@ namespace szedarserver.Api
         {
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IJwtExtension, JwtExtension>();
             services.AddControllers();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 
@@ -46,6 +53,35 @@ namespace szedarserver.Api
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    });
+            });
+
+            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             services.AddMvc();
         }
@@ -63,6 +99,10 @@ namespace szedarserver.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {

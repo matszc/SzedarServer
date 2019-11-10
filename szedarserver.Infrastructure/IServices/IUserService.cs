@@ -10,7 +10,9 @@ namespace szedarserver.Infrastructure.IServices
 {
     public interface IUserService
     {
-        public Task RegisterAsync(UserRegisterModel user);
-        public Task<AccountDTO> LoginAsync(LoginModel user);
+        Task RegisterAsync(UserRegisterModel user);
+        Task<AccountDTO> LoginAsync(LoginModel user);
+
+        Task<AccountDTO> LoginFbAsync(FbUserModel user);
     }
 }

@@ -10,7 +10,6 @@ using szedarserver.Infrastructure.Models;
 
 namespace szedarserver.Api.Controllers
 {
-    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -32,9 +31,22 @@ namespace szedarserver.Api.Controllers
             var res = await _userService.LoginAsync(loginData);
             if(res == null)
             {
-                return NotFound("user does not exists");
+                return NotFound("User does not exists");
             }
             return Ok(res);
         }
+
+        [HttpPost("loginFbUser")]
+        public async Task<ActionResult> LoginFbUser([FromBody] FbUserModel fbUser)
+        {
+            var res = await _userService.LoginFbAsync(fbUser);
+            return Ok(res);
+        }
+
+/*        [HttpGet("test")]
+        public ActionResult Test()
+        {
+            return Ok();
+        }*/
     }
 }

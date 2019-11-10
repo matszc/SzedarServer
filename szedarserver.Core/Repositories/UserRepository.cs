@@ -66,5 +66,17 @@ namespace szedarserver.Core.Repositories
                 throw e;
             }
         }
+
+        public async Task<User> GetUserByFbIdAsync(string fbId)
+        {
+            try
+            {
+                return await _context.Users.SingleOrDefaultAsync(x => x.FbId == fbId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
