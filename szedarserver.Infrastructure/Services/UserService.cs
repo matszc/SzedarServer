@@ -22,10 +22,12 @@ namespace szedarserver.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, IMapper mapper, IOptions<AppSettings> appSettings)
+        private readonly IJwtExtension _jwtExtension;
+        public UserService(IUserRepository userRepository, IMapper mapper, IJwtExtension jwtExtension)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _jwtExtension = jwtExtension;
         }
 
         public async Task<AccountDTO> LoginAsync(LoginModel user)
@@ -36,23 +38,11 @@ namespace szedarserver.Infrastructure.Services
             {
                 return null;
             }
-            var accout = _mapper.Map<AccountDTO>(User);
+            var account = _mapper.Map<AccountDTO>(User);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("testbfdgdgtestbfdgdgtestbfdgdgtestbfdgdg");
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, accout.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            accout.Token = tokenHandler.WriteToken(token);
+            account.Token = _jwtExtension.CreateToken(account.Id);
 
-            return accout;
+            return account;
 
         }
 

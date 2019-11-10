@@ -8,9 +8,9 @@ namespace szedarserver.Core.IRepositories
 {
     public interface IUserRepository
     {
-        public Task AddUserAsync(User user);
-        public Task<User> GetByEmailAsync(string email);
-        public Task<User> GetByLoginAsync(string login);
-        public Task<User> GetUserAsync(User user);
+        Task AddUserAsync(User user);
+        Task<User> GetByEmailAsync(string email);
+        Task<User> GetByLoginAsync(string login);
+        Task<User> GetUserAsync(User user);
     }
 }
