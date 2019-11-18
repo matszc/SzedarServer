@@ -51,33 +51,33 @@ namespace szedarserver.Infrastructure.Services
             var userFromDb = await _userRepository.GetUserByFbIdAsync(user.FbId);
             if (userFromDb == null)
             {
-                var newFbUser = new User(user.Email, user.Login, user.FbId, "");
-                await _userRepository.AddUserAsync(newFbUser);
+                userFromDb = new User(user.Email, user.Login, user.FbId, "");
+                await _userRepository.AddUserAsync(userFromDb);
             }
             var account = _mapper.Map<AccountDTO>(userFromDb);
             account.Token = _jwtExtension.CreateToken(account.Id);
             return account;
         }
 
-        public async Task RegisterAsync(UserRegisterModel _user)
+        public async Task RegisterAsync(UserRegisterModel user)
         {
-            var user = await _userRepository.GetByEmailAsync(_user.Email);
-            if(user != null)
+            var userFromDbByLogin = await _userRepository.GetByEmailAsync(user.Email);
+            if(userFromDbByLogin != null)
             {
                 throw new ValidationException("Login already exists");
             }
-            user = await _userRepository.GetByLoginAsync(_user.Login);
-            if(user != null)
+            var userFromDbByEmail = await _userRepository.GetByLoginAsync(user.Login);
+            if(userFromDbByEmail != null)
             {
                 throw new ValidationException("Email already exists");
             }
 
-            if (user.Password.Length < 4)
+            if (user.Password.Length <= 4)
             {
                 throw new ValidationException("Password too short");
             }
-            user = new User(_user.Email, HashExtension.HashPassword(_user.Password), _user.Login);
-            await _userRepository.AddUserAsync(user);
+            var newUser = new User(user.Email, HashExtension.HashPassword(user.Password), user.Login);
+            await _userRepository.AddUserAsync(newUser);
 
         }
 

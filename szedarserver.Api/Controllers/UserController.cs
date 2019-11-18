@@ -36,7 +36,7 @@ namespace szedarserver.Api.Controllers
             return Ok(res);
         }
 
-        [HttpPost("loginFbUser")]
+        [HttpPost("loginFb")]
         public async Task<ActionResult> LoginFbUser([FromBody] FbUserModel fbUser)
         {
             var res = await _userService.LoginFbAsync(fbUser);

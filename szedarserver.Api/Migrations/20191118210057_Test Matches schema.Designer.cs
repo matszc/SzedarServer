@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using szedarserver.Core.Domain.Context;
 
 namespace szedarserver.Api.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20191118210057_Test Matches schema")]
+    partial class TestMatchesschema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,8 +30,8 @@ namespace szedarserver.Api.Migrations
                     b.Property<string>("MatchCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NextMachCode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("PlayerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Result")
                         .HasColumnType("nvarchar(max)");
@@ -41,6 +43,8 @@ namespace szedarserver.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
 
                     b.HasIndex("TournamentId");
 
@@ -77,9 +81,6 @@ namespace szedarserver.Api.Migrations
 
                     b.Property<Guid?>("PlayerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Win")
                         .HasColumnType("bit");
@@ -144,15 +145,19 @@ namespace szedarserver.Api.Migrations
 
             modelBuilder.Entity("szedarserver.Core.Domain.Match", b =>
                 {
-                    b.HasOne("szedarserver.Core.Domain.Tournament", "Tournament")
+                    b.HasOne("szedarserver.Core.Domain.Player", null)
                         .WithMany("Matches")
+                        .HasForeignKey("PlayerId");
+
+                    b.HasOne("szedarserver.Core.Domain.Tournament", "Tournament")
+                        .WithMany()
                         .HasForeignKey("TournamentId");
                 });
 
             modelBuilder.Entity("szedarserver.Core.Domain.Player", b =>
                 {
                     b.HasOne("szedarserver.Core.Domain.Tournament", "Tournament")
-                        .WithMany("Players")
+                        .WithMany()
                         .HasForeignKey("TournamentId");
                 });
 
@@ -163,7 +168,7 @@ namespace szedarserver.Api.Migrations
                         .HasForeignKey("MatchId");
 
                     b.HasOne("szedarserver.Core.Domain.Player", "Player")
-                        .WithMany("Matches")
+                        .WithMany()
                         .HasForeignKey("PlayerId");
                 });
 

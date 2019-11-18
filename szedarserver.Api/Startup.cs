@@ -42,6 +42,7 @@ namespace szedarserver.Api
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IJwtExtension, JwtExtension>();
+            services.AddTransient<ITournamentService, TournamentService>();
             services.AddControllers();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 
@@ -69,7 +70,6 @@ namespace szedarserver.Api
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
