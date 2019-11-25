@@ -8,6 +8,5 @@ namespace szedarserver.Infrastructure.IServices
     {
         Task CreateSingleEliminationTournament(RegisterTournamentModel tournament,  Guid userId);
         Task CreateDoubleEliminationTournament(RegisterTournamentModel tournament, Guid userId);
-        Task CreateSwissTournament(RegisterTournamentModel tournament, Guid userId);
     }
 }

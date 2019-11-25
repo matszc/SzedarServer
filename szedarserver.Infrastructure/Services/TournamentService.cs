@@ -16,10 +16,5 @@ namespace szedarserver.Infrastructure.Services
         {
             throw new NotImplementedException();
         }
-
-        public async Task CreateSwissTournament(RegisterTournamentModel tournament, Guid userId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

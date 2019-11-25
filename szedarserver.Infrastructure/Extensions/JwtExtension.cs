@@ -1,14 +1,16 @@
 using System;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using szedarserver.Infrastructure.DTO;
 using szedarserver.Infrastructure.Setting;
 
 namespace szedarserver.Infrastructure.Extensions
 {
-    public class JwtExtension: IJwtExtension
+    public class JwtExtension : IJwtExtension
     {
         private readonly JwtSettings _jwtSettings;
 
@@ -17,21 +19,29 @@ namespace szedarserver.Infrastructure.Extensions
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string CreateToken(Guid userId)
+        public string CreateToken(AccountDTO user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var now = DateTime.UtcNow;
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256 
+                );
+            var claims = new Claim[]
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Sid, userId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(_jwtSettings.ExpireDays),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                //new Claim(JwtRegisteredClaimNames.Iat, now.ToString())
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var jwt = new JwtSecurityToken(
+                issuer: "https://localhost:5001",
+                claims: claims,
+                notBefore: now,
+                expires: now.AddDays(_jwtSettings.ExpireDays),
+                signingCredentials: signingCredentials
+            );
+            var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+            return token;
         }
     }
 }

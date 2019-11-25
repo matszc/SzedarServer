@@ -40,7 +40,7 @@ namespace szedarserver.Infrastructure.Services
             }
             var account = _mapper.Map<AccountDTO>(User);
 
-            account.Token = _jwtExtension.CreateToken(account.Id);
+            account.Token = _jwtExtension.CreateToken(account);
 
             return account;
 
@@ -55,7 +55,7 @@ namespace szedarserver.Infrastructure.Services
                 await _userRepository.AddUserAsync(userFromDb);
             }
             var account = _mapper.Map<AccountDTO>(userFromDb);
-            account.Token = _jwtExtension.CreateToken(account.Id);
+            account.Token = _jwtExtension.CreateToken(account);
             return account;
         }
 

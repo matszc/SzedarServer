@@ -43,6 +43,7 @@ namespace szedarserver.Api
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IJwtExtension, JwtExtension>();
             services.AddTransient<ITournamentService, TournamentService>();
+            services.AddTransient<ISwissService, SwissService>();
             services.AddControllers();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 
@@ -76,8 +77,8 @@ namespace szedarserver.Api
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                    ValidateIssuerSigningKey = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0f33ac630f544bc4a21aca21a472fb02")),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
@@ -98,9 +99,9 @@ namespace szedarserver.Api
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseAuthentication();
+            
+            app.UseAuthorization();
 
             app.UseCors(MyAllowSpecificOrigins);
 

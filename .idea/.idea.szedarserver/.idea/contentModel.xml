@@ -57,10 +57,12 @@
           <e p="User.cs" t="Include" />
         </e>
         <e p="IRepositories" t="Include">
+          <e p="ITournamentRepository.cs" t="Include" />
           <e p="IUserRepository.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Repositories" t="Include">
+          <e p="TournamentRepository.cs" t="Include" />
           <e p="UserRepository.cs" t="Include" />
         </e>
         <e p="bin" t="ExcludeRecursive" />
@@ -83,6 +85,7 @@
           <e p="JwtExtension.cs" t="Include" />
         </e>
         <e p="IServices" t="Include">
+          <e p="ISwissService.cs" t="Include" />
           <e p="ITournamentService.cs" t="Include" />
           <e p="IUserService.cs" t="Include" />
         </e>
@@ -97,6 +100,7 @@
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Services" t="Include">
+          <e p="SwissService.cs" t="Include" />
           <e p="TournamentService.cs" t="Include" />
           <e p="UserService.cs" t="Include" />
         </e>

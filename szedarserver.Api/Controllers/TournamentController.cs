@@ -10,13 +10,16 @@ namespace szedarserver.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TournamentController: ControllerBase
+    public class TournamentController : ControllerBase
     {
         private readonly ITournamentService _tournamentService;
-        private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty; 
 
-        TournamentController(ITournamentService tournamentService)
+        private readonly ISwissService _swissService;
+        private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+
+        public TournamentController(ITournamentService tournamentService, ISwissService swissService)
         {
+            _swissService = swissService;
             _tournamentService = tournamentService;
         }
 
@@ -38,14 +41,12 @@ namespace szedarserver.Api.Controllers
                 }
                 case TournamentsTypes.Siwss:
                 {
-                    await _tournamentService.CreateSwissTournament(tournament, UserId);
+                    await _swissService.CreateSwissTournament(tournament, UserId);
                     break;
                 }
-
             }
 
             return Ok();
         }
-
     }
 }
