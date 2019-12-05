@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_szedarserver.1868844727.00" t="ExcludeRecursive" />
-    <e p="$PROJECT_DIR$" t="IncludeFlat">
+    <e p="C:\Users\Mateusz\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_szedarserver.430962520.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Mateusz\Desktop\SzedarServer" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="szedarserver.Api" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
           <e p="TournamentController.cs" t="Include" />
           <e p="UserController.cs" t="Include" />
         </e>
         <e p="Migrations" t="Include">
-          <e p="20191019202827_initial.Designer.cs" t="Include" />
           <e p="20191019202827_initial.cs" t="Include" />
-          <e p="20191103163613_InitialCreate.Designer.cs" t="Include" />
+          <e p="20191019202827_initial.Designer.cs" t="Include" />
           <e p="20191103163613_InitialCreate.cs" t="Include" />
-          <e p="20191110182546_AddFbUsers.Designer.cs" t="Include" />
+          <e p="20191103163613_InitialCreate.Designer.cs" t="Include" />
           <e p="20191110182546_AddFbUsers.cs" t="Include" />
-          <e p="20191118202955_Create Tournaments Entity.Designer.cs" t="Include" />
+          <e p="20191110182546_AddFbUsers.Designer.cs" t="Include" />
           <e p="20191118202955_Create Tournaments Entity.cs" t="Include" />
-          <e p="20191118210057_Test Matches schema.Designer.cs" t="Include" />
+          <e p="20191118202955_Create Tournaments Entity.Designer.cs" t="Include" />
           <e p="20191118210057_Test Matches schema.cs" t="Include" />
-          <e p="20191118211016_Update matches saveing schema.Designer.cs" t="Include" />
+          <e p="20191118210057_Test Matches schema.Designer.cs" t="Include" />
           <e p="20191118211016_Update matches saveing schema.cs" t="Include" />
-          <e p="20191118211217_Add Score field to result.Designer.cs" t="Include" />
+          <e p="20191118211016_Update matches saveing schema.Designer.cs" t="Include" />
           <e p="20191118211217_Add Score field to result.cs" t="Include" />
-          <e p="20191128191334_change torunaments schema.Designer.cs" t="Include" />
+          <e p="20191118211217_Add Score field to result.Designer.cs" t="Include" />
           <e p="20191128191334_change torunaments schema.cs" t="Include" />
-          <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
+          <e p="20191128191334_change torunaments schema.Designer.cs" t="Include" />
           <e p="20191130183057_add ids in Results entity.cs" t="Include" />
-          <e p="20191201190236_rename columns.Designer.cs" t="Include" />
+          <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
           <e p="20191201190236_rename columns.cs" t="Include" />
+          <e p="20191201190236_rename columns.Designer.cs" t="Include" />
           <e p="DataBaseContextModelSnapshot.cs" t="Include" />
         </e>
-        <e p="Program.cs" t="Include" />
-        <e p="Properties" t="Include">
-          <e p="launchSettings.json" t="Include" />
-        </e>
-        <e p="Startup.cs" t="Include" />
-        <e p="appsettings.Development.json" t="Include" />
-        <e p="appsettings.json" t="Include" />
-        <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.0" t="Include">
@@ -48,9 +43,15 @@
             </e>
           </e>
         </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
         <e p="szedarserver.Api.csproj" t="IncludeRecursive" />
       </e>
       <e p="szedarserver.Core" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
         <e p="Domain" t="Include">
           <e p="Context" t="Include">
             <e p="DataBaseContext.cs" t="Include" />
@@ -67,13 +68,6 @@
           <e p="ITournamentRepository.cs" t="Include" />
           <e p="IUserRepository.cs" t="Include" />
         </e>
-        <e p="Program.cs" t="Include" />
-        <e p="Repositories" t="Include">
-          <e p="SwissRepository.cs" t="Include" />
-          <e p="TournamentRepository.cs" t="Include" />
-          <e p="UserRepository.cs" t="Include" />
-        </e>
-        <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.0" t="Include">
@@ -81,9 +75,16 @@
             </e>
           </e>
         </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Repositories" t="Include">
+          <e p="SwissRepository.cs" t="Include" />
+          <e p="TournamentRepository.cs" t="Include" />
+          <e p="UserRepository.cs" t="Include" />
+        </e>
         <e p="szedarserver.Core.csproj" t="IncludeRecursive" />
       </e>
       <e p="szedarserver.Infrastructure" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
         <e p="DTO" t="Include">
           <e p="AccountDTO.cs" t="Include" />
           <e p="MatchDTO.cs" t="Include" />
@@ -113,6 +114,13 @@
           <e p="SwissRoundModel.cs" t="Include" />
           <e p="UserRegisterModel.cs" t="Include" />
         </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="szedarserver.Infrastructure.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Program.cs" t="Include" />
         <e p="Services" t="Include">
           <e p="SwissService.cs" t="Include" />
@@ -121,14 +129,6 @@
         </e>
         <e p="Setting" t="Include">
           <e p="JwtSettings.cs" t="Include" />
-        </e>
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp3.0" t="Include">
-              <e p="szedarserver.Infrastructure.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
         </e>
         <e p="szedarserver.Infrastructure.csproj" t="IncludeRecursive" />
       </e>
