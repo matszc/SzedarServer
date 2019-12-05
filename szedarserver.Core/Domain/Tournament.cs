@@ -12,20 +12,32 @@ namespace szedarserver.Core.Domain
         [Required]
         public string Name { get; private set; }
         public Guid UserId { get; set; }
+        public TournamentsTypes Type { get; set; }
         public DateTime CreationDate { get; private set; }
-        public decimal NumberOfRounds { get; private set; }
+        public int NumberOfRounds { get; private set; }
+        
+        public int CurrentRound { get; set; }
 
         public virtual IEnumerable<Player> Players { get; set; }
         public virtual IEnumerable<Match> Matches { get; set; }
 
         public Tournament(){}
 
-        public Tournament(string name, decimal numberOfRounds, Guid userId)
+        public Tournament(string name, int numberOfRounds, Guid userId, TournamentsTypes type)
         {
             UserId = userId;
             NumberOfRounds = numberOfRounds;
             Name = name;
             CreationDate = DateTime.UtcNow;
+            Type = type;
+            CurrentRound = 1;
         }
+    }
+    
+    public enum TournamentsTypes
+    {
+        DoubleElimination = 0,
+        SingleElimination = 1,
+        Siwss = 2
     }
 }

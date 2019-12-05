@@ -44,6 +44,8 @@ namespace szedarserver.Api
             services.AddTransient<IJwtExtension, JwtExtension>();
             services.AddTransient<ITournamentService, TournamentService>();
             services.AddTransient<ISwissService, SwissService>();
+            services.AddTransient<ISwissRepository, SwissRepository>();
+            services.AddTransient<ITournamentRepository, TournamentRepository>();
             services.AddControllers();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 

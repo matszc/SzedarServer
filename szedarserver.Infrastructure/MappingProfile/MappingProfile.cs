@@ -14,6 +14,7 @@ namespace szedarserver.Infrastructure.MappingProfile
         {
             CreateMap<LoginModel, User>();
             CreateMap<User, AccountDTO>();
+            CreateMap<Tournament, TournamentDTO>();
         }
     }
 }

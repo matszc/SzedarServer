@@ -25,6 +25,12 @@
           <e p="20191118211016_Update matches saveing schema.cs" t="Include" />
           <e p="20191118211217_Add Score field to result.Designer.cs" t="Include" />
           <e p="20191118211217_Add Score field to result.cs" t="Include" />
+          <e p="20191128191334_change torunaments schema.Designer.cs" t="Include" />
+          <e p="20191128191334_change torunaments schema.cs" t="Include" />
+          <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
+          <e p="20191130183057_add ids in Results entity.cs" t="Include" />
+          <e p="20191201190236_rename columns.Designer.cs" t="Include" />
+          <e p="20191201190236_rename columns.cs" t="Include" />
           <e p="DataBaseContextModelSnapshot.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />
@@ -57,11 +63,13 @@
           <e p="User.cs" t="Include" />
         </e>
         <e p="IRepositories" t="Include">
+          <e p="ISwissRepository.cs" t="Include" />
           <e p="ITournamentRepository.cs" t="Include" />
           <e p="IUserRepository.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Repositories" t="Include">
+          <e p="SwissRepository.cs" t="Include" />
           <e p="TournamentRepository.cs" t="Include" />
           <e p="UserRepository.cs" t="Include" />
         </e>
@@ -78,6 +86,12 @@
       <e p="szedarserver.Infrastructure" t="IncludeRecursive">
         <e p="DTO" t="Include">
           <e p="AccountDTO.cs" t="Include" />
+          <e p="MatchDTO.cs" t="Include" />
+          <e p="RoundDTO.cs" t="Include" />
+          <e p="SwissDTO.cs" t="Include" />
+          <e p="SwissRoundDTO.cs" t="Include" />
+          <e p="SwissTableDTO.cs" t="Include" />
+          <e p="TournamentDTO.cs" t="Include" />
         </e>
         <e p="Extensions" t="Include">
           <e p="HashExtension.cs" t="Include" />
@@ -96,6 +110,7 @@
           <e p="FbUserModel.cs" t="Include" />
           <e p="LoginModel.cs" t="Include" />
           <e p="RegisterTournamentModel.cs" t="Include" />
+          <e p="SwissRoundModel.cs" t="Include" />
           <e p="UserRegisterModel.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />

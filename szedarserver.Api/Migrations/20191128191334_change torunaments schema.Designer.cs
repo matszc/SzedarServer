@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using szedarserver.Core.Domain.Context;
 
 namespace szedarserver.Api.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20191128191334_change torunaments schema")]
+    partial class changetorunamentsschema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace szedarserver.Api.Migrations
                     b.Property<int>("Round")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TournamentId")
+                    b.Property<Guid?>("TournamentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -69,10 +71,10 @@ namespace szedarserver.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MatchId")
+                    b.Property<Guid?>("MatchId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PlayerId")
+                    b.Property<Guid?>("PlayerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Score")
@@ -98,9 +100,6 @@ namespace szedarserver.Api.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CurrentRound")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -152,9 +151,7 @@ namespace szedarserver.Api.Migrations
                 {
                     b.HasOne("szedarserver.Core.Domain.Tournament", "Tournament")
                         .WithMany("Matches")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TournamentId");
                 });
 
             modelBuilder.Entity("szedarserver.Core.Domain.Player", b =>
@@ -167,16 +164,12 @@ namespace szedarserver.Api.Migrations
             modelBuilder.Entity("szedarserver.Core.Domain.Result", b =>
                 {
                     b.HasOne("szedarserver.Core.Domain.Match", "Match")
-                        .WithMany("Result")
-                        .HasForeignKey("MatchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Result1")
+                        .HasForeignKey("MatchId");
 
                     b.HasOne("szedarserver.Core.Domain.Player", "Player")
-                        .WithMany("Results")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Matches")
+                        .HasForeignKey("PlayerId");
                 });
 
             modelBuilder.Entity("szedarserver.Core.Domain.Tournament", b =>

@@ -24,10 +24,6 @@ namespace szedarserver.Core.Domain
             Password = password;
             Login = login;
         }
-        public User()
-        {
-
-        }
 
         public User(string email, string login, string fbId, string password)
         {

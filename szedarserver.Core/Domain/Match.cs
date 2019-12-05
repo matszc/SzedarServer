@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace szedarserver.Core.Domain
@@ -7,8 +8,15 @@ namespace szedarserver.Core.Domain
         public string MatchCode { get; set; }
         public string NextMachCode { get; set; }
         public int Round { get; set; }
-        public string Result { get; set; }
-        public IEnumerable<Result> Result1 { get; set; }
-        public Tournament Tournament { get; set; }
+        public virtual IEnumerable<Result> Result { get; set; }
+        public virtual Tournament Tournament { get; set; }
+        public Guid TournamentId { get; set; }
+
+        public Match(int round, Guid tournamentId)
+        {
+            Id = Guid.NewGuid();
+            Round = round;
+            TournamentId = tournamentId;
+        }
     }
 }
