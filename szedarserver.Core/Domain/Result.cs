@@ -12,11 +12,15 @@ namespace szedarserver.Core.Domain
         public bool Win { get; set; }
         public int Score { get; set; }
 
+        public Result() { }
+
         public Result(Guid playerId, Guid matchId)
         {
             PlayerId = playerId;
             MatchId = matchId;
             Id = Guid.NewGuid();
+            Score = 0;
+            Win = false;
         }
     }
 }

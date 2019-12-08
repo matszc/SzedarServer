@@ -48,21 +48,91 @@ namespace szedarserver.Infrastructure.Services
             
             SwissDTO res = new SwissDTO();
 
-            res.SwissTable = CreateSwissTable(tournament.Matches);
+            res.SwissTable = CreateSwissTable(tournament);
 
-            res.Rounds = GenerateRounds(tournament);
+           res.Rounds = GetRounds(tournament);
 
             return res;
         }
 
-        private IEnumerable<RoundDTO> GenerateRounds(Tournament tournament)
+        private IEnumerable<RoundDTO> GetRounds(Tournament tournament)
         {
-            throw new NotImplementedException();
+            var res = new List<RoundDTO>();
+            for (var i = 1; i <= tournament.CurrentRound; i++)
+            {
+                var matchesList = new List<MatchDTO>();
+                var matches = tournament.Matches.Where(m => m.Round == i).ToList();
+                foreach (var match in matches)
+                {
+                    var matchDto = new MatchDTO
+                    {
+                        Id = match.Id,
+                        Player1 = match.Result.First().Player.Nick,
+                        Player1Score = match.Result.First().Score,
+                        Player2 = match.Result.Last().Player.Nick,
+                        Player2Score = match.Result.Last().Score,
+                    };
+                    matchesList.Add(matchDto);
+                }
+                res.Add(new RoundDTO
+                {
+                    MatchDtos = matchesList,
+                });
+            }
+
+            return res;
         }
 
-        private SwissTableDTO[] CreateSwissTable(IEnumerable<Match> matches)
+        private IEnumerable<SwissTableDTO> CreateSwissTable(Tournament tournament)
         {
-            throw new NotImplementedException();
+            var res = new List<SwissTableDTO>();
+            foreach (var player in tournament.Players)
+            {
+                var swissTableDto = new SwissTableDTO(player.Nick);
+
+                var points = 0;
+                var wins = 0;
+                var loses = 0;
+                
+                foreach (var result in player.Results)
+                {
+                    points += result.Win ? 2 : 0;
+                    wins += result.Score;
+
+                    var match = tournament.Matches.SingleOrDefault(m => m.Id == result.MatchId);
+
+                    var losesScore = match?.Result?.SingleOrDefault(r => r.MatchId != result.MatchId);
+
+                    if(losesScore != null)
+                    {
+                        loses += losesScore.Score;   
+                    }
+                }
+                swissTableDto.Points = points;
+                swissTableDto.MatchesLost = loses;
+                swissTableDto.MatchesWon = wins;
+                res.Add(swissTableDto);
+            }
+
+            var list =  res.OrderBy(p => p.Points).Reverse().ToList();
+
+            var satrtPositon = 1;
+            
+            for (var i = 0; i < list.Count(); i++)
+            {
+                var item = list[i];
+
+                item.Position = satrtPositon;
+                if (i < list.Count() - 1)
+                {
+                    if (item.Points > list[i + 1].Points)
+                    {
+                        satrtPositon++;
+                    } 
+                }
+            }
+
+            return list;
         }
 
         private SwissRoundModel GenerateNextRound(SwissTableDTO table, IEnumerable<Match> matches)
@@ -94,6 +164,10 @@ namespace szedarserver.Infrastructure.Services
                 }
                 if (p2 == null)
                 {
+                    results.Add(new Result
+                    {
+                        MatchId = match.Id
+                    });
                     result1.Score = 1;
                     result1.Win = true;
                 }

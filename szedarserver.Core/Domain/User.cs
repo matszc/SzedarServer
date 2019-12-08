@@ -17,6 +17,8 @@ namespace szedarserver.Core.Domain
         public string FbId { get; set; }
         
         public virtual IEnumerable<Tournament> Tournaments { get; set; }
+        
+        public User() {} // for mapper
         public User (string email, string password, string login)
         {
             Id = Guid.NewGuid();
