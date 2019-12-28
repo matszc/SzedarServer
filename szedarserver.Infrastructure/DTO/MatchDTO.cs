@@ -9,6 +9,7 @@ namespace szedarserver.Infrastructure.DTO
         public int Player1Score { get; set; }
         public string Player2 { get; set; }
         public int Player2Score { get; set; }
+        public bool EditAble { get; set; }
     }
 
     public class PlayerMatchDTO

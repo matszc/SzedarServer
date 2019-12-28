@@ -17,13 +17,16 @@ namespace szedarserver.Api.Controllers
         private readonly ITournamentService _tournamentService;
 
         private readonly ISwissService _swissService;
+
+        private readonly ISingleEliminationService _singleEliminationService;
         private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
 
-        public TournamentController(ITournamentService tournamentService, ISwissService swissService, ITournamentRepository tournamentRepository)
+        public TournamentController(ITournamentService tournamentService, ISwissService swissService, ISingleEliminationService singleEliminationService)
         {
             _swissService = swissService;
             _tournamentService = tournamentService;
-            
+            _singleEliminationService = singleEliminationService;
+
         }
 
         [HttpPost("create")]
@@ -40,7 +43,6 @@ namespace szedarserver.Api.Controllers
                 }
                 case TournamentsTypes.SingleElimination:
                 {
-                    await _tournamentService.CreateSingleEliminationTournament(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.Siwss:
@@ -56,19 +58,6 @@ namespace szedarserver.Api.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpGet(("swiss/{id}"))]
-        public IActionResult GetSwissInfo(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var guid = Guid.Parse(id);
-            var res =  _swissService.GetTournamentDataAsync(guid);
-
-            return Ok(res);
         }
 
         [HttpGet("GetAll")]

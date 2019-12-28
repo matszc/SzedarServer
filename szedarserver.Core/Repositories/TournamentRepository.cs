@@ -25,12 +25,27 @@ namespace szedarserver.Core.Repositories
                 .Include(b => b.Matches)
                 .ThenInclude(m => m.Result)
                 .FirstOrDefault();
-            // return await _context.Tournaments.SingleOrDefaultAsync(t => t.Id == id);
         }
 
         public IEnumerable<Tournament> GetAllUserTournaments(Guid userId)
         {
             return _context.Tournaments.Where(t => t.UserId == userId);
+        }
+
+        public Match GetMatch(Guid id)
+        {
+            return _context.Matches.Where(t => t.Id == id)
+                .Include(b => b.Result)
+                .ThenInclude(r => r.Player)
+                .SingleOrDefault();
+        }
+
+        public async Task UpdateResult(Result result1, Result result2)
+        {
+            _context.Results.Update(result1);
+            _context.Results.Update(result2);
+            
+            await _context.SaveChangesAsync();
         }
     }
 }

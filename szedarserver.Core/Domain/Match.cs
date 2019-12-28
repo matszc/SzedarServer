@@ -7,6 +7,7 @@ namespace szedarserver.Core.Domain
     {
         public string MatchCode { get; set; }
         public string NextMachCode { get; set; }
+        public bool EditAble { get; set; }
         public int Round { get; set; }
         public virtual IEnumerable<Result> Result { get; set; }
         public virtual Tournament Tournament { get; set; }
@@ -17,6 +18,7 @@ namespace szedarserver.Core.Domain
             Id = Guid.NewGuid();
             Round = round;
             TournamentId = tournamentId;
+            EditAble = true;
         }
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Mateusz\.Rider2019.2\config\consoles\db" t="IncludeRecursive" />
-    <e p="C:\Users\Mateusz\.Rider2019.2\config\Extensions" t="IncludeRecursive" />
-    <e p="C:\Users\Mateusz\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Mateusz\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_szedarserver.430962520.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\config\consoles\db" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\config\Extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_szedarserver.430962520.00" t="ExcludeRecursive" />
     <e p="C:\Users\Mateusz\Desktop\SzedarServer" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="szedarserver.Api" t="IncludeRecursive">
@@ -12,6 +12,7 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="SwissController.cs" t="Include" />
           <e p="TournamentController.cs" t="Include" />
           <e p="UserController.cs" t="Include" />
         </e>
@@ -36,6 +37,8 @@
           <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
           <e p="20191201190236_rename columns.cs" t="Include" />
           <e p="20191201190236_rename columns.Designer.cs" t="Include" />
+          <e p="20191222133642_Add EditAble to match.cs" t="Include" />
+          <e p="20191222133642_Add EditAble to match.Designer.cs" t="Include" />
           <e p="DataBaseContextModelSnapshot.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -102,6 +105,7 @@
           <e p="JwtExtension.cs" t="Include" />
         </e>
         <e p="IServices" t="Include">
+          <e p="ISingleEliminationService.cs" t="Include" />
           <e p="ISwissService.cs" t="Include" />
           <e p="ITournamentService.cs" t="Include" />
           <e p="IUserService.cs" t="Include" />
@@ -125,6 +129,7 @@
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Services" t="Include">
+          <e p="SingleEliminationService.cs" t="Include" />
           <e p="SwissService.cs" t="Include" />
           <e p="TournamentService.cs" t="Include" />
           <e p="UserService.cs" t="Include" />
