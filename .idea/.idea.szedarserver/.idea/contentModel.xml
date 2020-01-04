@@ -12,6 +12,7 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="SingleEliminationController.cs" t="Include" />
           <e p="SwissController.cs" t="Include" />
           <e p="TournamentController.cs" t="Include" />
           <e p="UserController.cs" t="Include" />
@@ -71,6 +72,7 @@
         <e p="IRepositories" t="Include">
           <e p="ISwissRepository.cs" t="Include" />
           <e p="ITournamentRepository.cs" t="Include" />
+          <e p="ITreeRepository.cs" t="Include" />
           <e p="IUserRepository.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -84,6 +86,7 @@
         <e p="Repositories" t="Include">
           <e p="SwissRepository.cs" t="Include" />
           <e p="TournamentRepository.cs" t="Include" />
+          <e p="TreeRepository.cs" t="Include" />
           <e p="UserRepository.cs" t="Include" />
         </e>
         <e p="szedarserver.Core.csproj" t="IncludeRecursive" />
@@ -93,9 +96,9 @@
         <e p="DTO" t="Include">
           <e p="AccountDTO.cs" t="Include" />
           <e p="MatchDTO.cs" t="Include" />
+          <e p="NodeDTO.cs" t="Include" />
           <e p="RoundDTO.cs" t="Include" />
           <e p="SwissDTO.cs" t="Include" />
-          <e p="SwissRoundDTO.cs" t="Include" />
           <e p="SwissTableDTO.cs" t="Include" />
           <e p="TournamentDTO.cs" t="Include" />
         </e>

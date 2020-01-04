@@ -44,7 +44,7 @@ namespace szedarserver.Infrastructure.Services
 
             var firstRound = GenerateFirstRound(newTournament);
 
-            await _swissRepository.CreateTournamentAsync(newTournament, players, firstRound.Matches,
+            await _tournamentRepository.CreateTournamentAsync(newTournament, players, firstRound.Matches,
                 firstRound.Results);
 
             return newTournament;

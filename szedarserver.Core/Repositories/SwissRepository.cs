@@ -17,29 +17,6 @@ namespace szedarserver.Core.Repositories
             _context = context;
         }
 
-        public async Task<Tournament> CreateTournamentAsync(Tournament tournament, IEnumerable<Player> players,
-            IEnumerable<Match> matches, IEnumerable<Result> results)
-        {
-            _context.Tournaments.Add(tournament);
-            foreach (var player in players)
-            {
-                _context.Players.Add(player);
-            }
-
-            foreach (var match in matches)
-            {
-                _context.Matches.Add(match);
-            }
-
-            foreach (var result in results)
-            {
-                _context.Results.Add(result);
-            }
-
-            await _context.SaveChangesAsync();
-            return tournament;
-        }
-
         public async Task AddMatches(IEnumerable<Match> matches, IEnumerable<Result> results)
         {
             foreach (var match in matches)

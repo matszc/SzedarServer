@@ -11,10 +11,4 @@ namespace szedarserver.Infrastructure.DTO
         public int Player2Score { get; set; }
         public bool EditAble { get; set; }
     }
-
-    public class PlayerMatchDTO
-    {
-        public string Nick { get; set; }
-        public bool Win { get; set; }
-    }
 }

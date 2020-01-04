@@ -38,11 +38,12 @@ namespace szedarserver.Api.Controllers
             {
                 case TournamentsTypes.DoubleElimination:
                 {
-                    await _tournamentService.CreateDoubleEliminationTournament(tournament, UserId);
+                    //res = await _tournamentService.CreateDoubleEliminationTournament(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.SingleElimination:
                 {
+                    res = await _singleEliminationService.CreateSingleEliminationTournament(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.Siwss:

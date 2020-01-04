@@ -9,6 +9,6 @@ namespace szedarserver.Core.Domain
     public abstract class EntityGuid
     {
         [Key] [Column(TypeName = "uniqueidentifier")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; protected set; } = Guid.NewGuid();
     }
 }

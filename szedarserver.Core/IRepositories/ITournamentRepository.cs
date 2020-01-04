@@ -7,6 +7,7 @@ namespace szedarserver.Core.IRepositories
 {
     public interface ITournamentRepository
     {
+        Task<Tournament> CreateTournamentAsync(Tournament tournament, IEnumerable<Player> players, IEnumerable<Match> matches, IEnumerable<Result> results);
         Tournament GetTournament(Guid id);
 
         IEnumerable<Tournament> GetAllUserTournaments(Guid userId);

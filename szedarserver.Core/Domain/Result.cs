@@ -18,7 +18,6 @@ namespace szedarserver.Core.Domain
         {
             PlayerId = playerId;
             MatchId = matchId;
-            Id = Guid.NewGuid();
             Score = 0;
             Win = false;
         }

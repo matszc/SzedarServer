@@ -13,7 +13,7 @@ namespace szedarserver.Core.Domain
         public string Name { get; private set; }
         public Guid UserId { get; set; }
         public TournamentsTypes Type { get; set; }
-        public DateTime CreationDate { get; private set; }
+        public DateTime CreationDate { get; protected set; } = DateTime.UtcNow;
         public int NumberOfRounds { get; private set; }
         
         public int CurrentRound { get; set; }
@@ -28,9 +28,15 @@ namespace szedarserver.Core.Domain
             UserId = userId;
             NumberOfRounds = numberOfRounds;
             Name = name;
-            CreationDate = DateTime.UtcNow;
             Type = type;
             CurrentRound = 1;
+        }
+
+        public Tournament(string name, Guid userId, TournamentsTypes type)
+        {
+            UserId = userId;
+            Name = name;
+            Type = type;
         }
     }
     

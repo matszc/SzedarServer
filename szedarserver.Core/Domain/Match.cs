@@ -13,6 +13,13 @@ namespace szedarserver.Core.Domain
         public virtual Tournament Tournament { get; set; }
         public Guid TournamentId { get; set; }
 
+        public Match(string matchCode, int round, Guid tournamentId)
+        {
+            MatchCode = matchCode;
+            Round = round;
+            TournamentId = tournamentId;
+            EditAble = true;
+        }
         public Match(int round, Guid tournamentId)
         {
             Id = Guid.NewGuid();
