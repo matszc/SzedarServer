@@ -50,7 +50,7 @@ namespace szedarserver.Infrastructure.Services
             return newTournament;
         }
 
-        public SwissDTO GetTournamentDataAsync(Guid tournamentId)
+        public SwissDTO GetTournamentData(Guid tournamentId)
         {
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 

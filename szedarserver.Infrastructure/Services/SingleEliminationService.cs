@@ -33,7 +33,7 @@ namespace szedarserver.Infrastructure.Services
 
             foreach (var player in tournamentData.Players)
             {
-                if (players.Find(p => p.Nick == player) != null)
+                if (players.Find(pl => pl.Nick == player) != null)
                 {
                     continue;
                 }
@@ -63,6 +63,8 @@ namespace szedarserver.Infrastructure.Services
                     result.MatchId = match;
                 }
             }
+            
+            var newResults = new List<Result>();
 
             foreach (var result in results)
             {
@@ -72,12 +74,15 @@ namespace szedarserver.Infrastructure.Services
                 {
                     result.Score = 1;
                     result.Win = true;
+                    var matchCode = matches.Single(m => m.Id == result.MatchId).NextMachCode;
+                    var matchId = matches.Single(m => m.MatchCode == matchCode).Id;
+                    newResults.Add(new Result(result.PlayerId, matchId));
                 }
 
                 matches.First(m => m.Id == result.MatchId).EditAble = false;
             }
 
-            await _tournamentRepository.CreateTournamentAsync(tournament, players, matches, results);
+            await _tournamentRepository.CreateTournamentAsync(tournament, players, matches, results.Concat(newResults));
 
             return tournament;
         }
@@ -94,6 +99,18 @@ namespace szedarserver.Infrastructure.Services
             return GetNodes(tournament);
         }
 
+        public IEnumerable<NodeDTO> GetFlatStructure(Guid tournamentId)
+        {
+            var tournament = _tournamentRepository.GetTournament(tournamentId);
+
+            if (tournament == null)
+            {
+                return null;
+            }
+
+            return GetFlatStructure(tournament).OrderBy(t => t.MatchCode);
+        }
+
         private IEnumerable<NodeDTO> GetNodes(Tournament tournament)
         {
             var firsRound = tournament.Matches.Where(m => m.Round == 1);
@@ -106,7 +123,7 @@ namespace szedarserver.Infrastructure.Services
                     MatchCode = match.MatchCode,
                     Round = match.Round,
                     EditAble = match.EditAble,
-                    NextMatch = CreateNode(tournament, match.NextMachCode),
+                    NextMatch = CreateNode(tournament, match.NextMachCode, false, true),
                 };
                 if (match.Result.Any())
                 {
@@ -125,8 +142,43 @@ namespace szedarserver.Infrastructure.Services
             return res;
         }
 
-        private NodeDTO CreateNode(Tournament tournament, string matchCode)
+        private IEnumerable<NodeDTO> GetFlatStructure(Tournament tournament)
         {
+            var res = new List<NodeDTO>();
+            foreach (var match in tournament.Matches)
+            {
+                var node = new NodeDTO()
+                {
+                    Id = match.Id,
+                    MatchCode = match.MatchCode,
+                    Round = match.Round,
+                    EditAble = match.EditAble,
+                    NextMatch = match.NextMachCode != null? CreateNode(tournament, match.NextMachCode, false, true): null,
+                };
+                if (match.Result.Any())
+                {
+                    node.Player1 = match.Result.First().Player.Nick;
+                    node.Player1Score = match.Result.First().Score;
+                }
+                if (match.Result.Count() > 1)
+                {
+                    node.Player2Score = match.Result.Last().Score;
+                    node.Player2 = match.Result.Last().Player.Nick;
+                }
+
+                res.Add(node);
+            }
+
+            return res;
+        }
+
+        private NodeDTO CreateNode(Tournament tournament, string matchCode, bool flat, bool recursionFlag)
+        {
+            if (!recursionFlag)
+            {
+                return null;
+            }
+            
             var match = tournament.Matches.First(m => m.MatchCode == matchCode);
             if (match.NextMachCode != null)
             {
@@ -145,7 +197,7 @@ namespace szedarserver.Infrastructure.Services
                     Player2 = p1 != p2? p2: null,
                     Player2Score = p1 != p2? p2Score != null? p2Score.Value :0: 0,
                     EditAble = match.EditAble,
-                    NextMatch = CreateNode(tournament, match.NextMachCode)
+                    NextMatch = CreateNode(tournament, match.NextMachCode, flat, flat)
                 };
             }
 
@@ -172,7 +224,7 @@ namespace szedarserver.Infrastructure.Services
             return lastNode;
         }
 
-        private IEnumerable<Match> CreateMatches(int numberOfPlayers, Guid tournamentId)
+        private List<Match> CreateMatches(int numberOfPlayers, Guid tournamentId)
         {
             var res = new List<Match>();
 

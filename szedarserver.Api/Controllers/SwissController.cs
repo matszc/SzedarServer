@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Differencing;
 using szedarserver.Core.Domain;
+using szedarserver.Core.IRepositories;
 using szedarserver.Infrastructure.DTO;
 using szedarserver.Infrastructure.IServices;
 using szedarserver.Infrastructure.Services;
@@ -14,12 +15,14 @@ namespace szedarserver.Api.Controllers
     public class SwissController : ControllerBase
     {
         private readonly ISwissService _swissService;
+        private readonly ITournamentRepository _tournamentRepository;
         
         private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
 
-        public SwissController(ISwissService swissService)
+        public SwissController(ISwissService swissService, ITournamentRepository tournamentRepository)
         {
             _swissService = swissService;
+            _tournamentRepository = tournamentRepository;
         }
         
         [HttpGet(("{id}"))]
@@ -30,7 +33,14 @@ namespace szedarserver.Api.Controllers
                 return NotFound();
             }
             var guid = Guid.Parse(id);
-            var res =  _swissService.GetTournamentDataAsync(guid);
+            var tournament = _tournamentRepository.GetRawTournament(guid);
+
+            if (tournament == null || tournament.Type != TournamentsTypes.Siwss)
+            {
+                return NotFound();
+            }
+            
+            var res =  _swissService.GetTournamentData(guid);
 
             return Ok(res);
         }

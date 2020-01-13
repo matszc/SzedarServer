@@ -10,7 +10,7 @@ namespace szedarserver.Infrastructure.IServices
     public interface ISwissService
     {
         Task<Tournament> CreateSwissTournamentAsync(RegisterTournamentModel tournament, Guid userId);
-        SwissDTO GetTournamentDataAsync(Guid tournamentId);
+        SwissDTO GetTournamentData(Guid tournamentId);
         Task AddResultAsync(Guid matchId, MatchDTO match);
 
         Task MoveNextRound(Guid tournamentId);

@@ -11,5 +11,6 @@ namespace szedarserver.Infrastructure.IServices
     {
         Task<Tournament> CreateSingleEliminationTournament(RegisterTournamentModel tournamentData,  Guid userId);
         IEnumerable<NodeDTO> GetSingleEliminationTree(Guid tournamentId);
+        IEnumerable<NodeDTO> GetFlatStructure (Guid tournamentId);
     }
 }

@@ -3,6 +3,7 @@ using szedarserver.Infrastructure.IServices;
 using szedarserver.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using szedarserver.Core.IRepositories;
 using szedarserver.Infrastructure.DTO;
@@ -39,7 +40,7 @@ namespace szedarserver.Infrastructure.Services
                 res.Add(_mapper.Map<TournamentDTO>(tournament));
             }
 
-            return res;
+            return res.OrderBy(r => r.CreationDate).Reverse();
         }
     }
 }

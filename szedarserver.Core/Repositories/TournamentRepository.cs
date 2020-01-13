@@ -63,6 +63,11 @@ namespace szedarserver.Core.Repositories
                 .SingleOrDefault();
         }
 
+        public Tournament GetRawTournament(Guid id)
+        {
+            return _context.Tournaments.SingleOrDefault(t => t.Id == id);
+        }
+
         public async Task UpdateResult(Result result1, Result result2)
         {
             _context.Results.Update(result1);

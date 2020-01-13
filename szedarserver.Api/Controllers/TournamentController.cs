@@ -18,15 +18,19 @@ namespace szedarserver.Api.Controllers
 
         private readonly ISwissService _swissService;
 
+        private readonly ITournamentRepository _tournamentRepository;
+
         private readonly ISingleEliminationService _singleEliminationService;
         private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
 
-        public TournamentController(ITournamentService tournamentService, ISwissService swissService, ISingleEliminationService singleEliminationService)
+        public TournamentController(ITournamentService tournamentService, 
+            ISwissService swissService, 
+            ISingleEliminationService singleEliminationService, ITournamentRepository tournamentRepository)
         {
             _swissService = swissService;
             _tournamentService = tournamentService;
             _singleEliminationService = singleEliminationService;
-
+            _tournamentRepository = tournamentRepository;
         }
 
         [HttpPost("create")]

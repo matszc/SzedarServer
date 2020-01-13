@@ -12,6 +12,8 @@ namespace szedarserver.Core.IRepositories
 
         IEnumerable<Tournament> GetAllUserTournaments(Guid userId);
         Match GetMatch(Guid id);
+
+        Tournament GetRawTournament(Guid id);
         Task UpdateResult(Result result1, Result result2);
 
     }
