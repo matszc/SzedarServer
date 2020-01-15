@@ -75,5 +75,17 @@ namespace szedarserver.Core.Repositories
             
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddResult(Result result)
+        {
+            _context.Results.Add(result);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteResult(Result result)
+        {
+            _context.Results.Remove(result);
+            await _context.SaveChangesAsync();
+        }
     }
 }

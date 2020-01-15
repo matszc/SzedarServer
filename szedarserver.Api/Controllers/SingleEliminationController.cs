@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using szedarserver.Core.Domain;
 using szedarserver.Core.IRepositories;
+using szedarserver.Infrastructure.DTO;
 using szedarserver.Infrastructure.IServices;
 
 namespace szedarserver.Api.Controllers
@@ -56,6 +57,13 @@ namespace szedarserver.Api.Controllers
             }
             
             return Ok(res);
+        }
+
+        [HttpPatch("match")]
+        public async Task<IActionResult> AddResult([FromBody] MatchDTO match)
+        {
+            await _singleEliminationService.UpdateResult(match);
+            return Ok();
         }
 
         private bool CheckTournament(Guid id)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using szedarserver.Core.Domain;
@@ -111,6 +112,40 @@ namespace szedarserver.Infrastructure.Services
             return GetFlatStructure(tournament).OrderBy(t => t.MatchCode);
         }
 
+        public async Task UpdateResult(MatchDTO matchDto)
+        {
+            var match = _tournamentRepository.GetMatch(matchDto.Id);
+            
+            var nextMatch = _treeRepository.GetMatchByCode(match.NextMachCode, match.TournamentId);
+            
+            if (match.Result.Count() != 2 || matchDto.Player1Score == matchDto.Player2Score
+                || (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.Win) != null))
+            {
+                throw new ValidationException("Can't update this match");
+            }
+            var p1 = match.Result.Single(r => r.Player.Nick == matchDto.Player1);
+            var p2 = match.Result.Single(r => r.Player.Nick == matchDto.Player2);
+            
+            p1.Score = matchDto.Player1Score;
+            p1.Win = matchDto.Player1Score > matchDto.Player2Score;
+            
+            p2.Score = matchDto.Player2Score;
+            p2.Win = matchDto.Player1Score < matchDto.Player2Score;
+
+            await _tournamentRepository.UpdateResult(p1, p2);
+
+            var winner = matchDto.Player1Score > matchDto.Player2Score ? p1 : p2;
+
+            if (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null)
+            {
+                await _tournamentRepository.DeleteResult(nextMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
+            }
+            
+            var result = new Result(winner.PlayerId, nextMatch.Id){};
+
+            await _tournamentRepository.AddResult(result);
+        }
+
         private IEnumerable<NodeDTO> GetNodes(Tournament tournament)
         {
             var firsRound = tournament.Matches.Where(m => m.Round == 1);
@@ -152,7 +187,7 @@ namespace szedarserver.Infrastructure.Services
                     Id = match.Id,
                     MatchCode = match.MatchCode,
                     Round = match.Round,
-                    EditAble = match.EditAble,
+                    EditAble = match.Result.Count() == 2,
                     NextMatch = match.NextMachCode != null? CreateNode(tournament, match.NextMachCode, false, true): null,
                 };
                 if (match.Result.Any())

@@ -16,5 +16,9 @@ namespace szedarserver.Core.IRepositories
         Tournament GetRawTournament(Guid id);
         Task UpdateResult(Result result1, Result result2);
 
+        Task AddResult(Result result);
+
+        Task DeleteResult(Result result);
+
     }
 }

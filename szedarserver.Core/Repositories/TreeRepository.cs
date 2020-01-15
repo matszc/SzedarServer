@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using szedarserver.Core.Domain;
 using szedarserver.Core.Domain.Context;
 using szedarserver.Core.IRepositories;
@@ -12,6 +15,14 @@ namespace szedarserver.Core.Repositories
         public TreeRepository (DataBaseContext context)
         {
             _context = context;
+        }
+
+        public Match GetMatchByCode(string matchCode, Guid tournamentId)
+        {
+            return _context.Matches.Where(m => m.TournamentId == tournamentId && m.MatchCode == matchCode)
+                .Include(b => b.Result)
+                .ThenInclude(r => r.Player)
+                .SingleOrDefault();
         }
     }
 }
