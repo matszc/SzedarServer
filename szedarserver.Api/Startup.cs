@@ -48,6 +48,7 @@ namespace szedarserver.Api
             services.AddTransient<ITournamentRepository, TournamentRepository>();
             services.AddTransient<ISingleEliminationService, SingleEliminationService>();
             services.AddTransient<ITreeRepository, TreeRepository>();
+            services.AddTransient<IDoubleEliminationService, DoubleEliminationService>();
             services.AddControllers();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 

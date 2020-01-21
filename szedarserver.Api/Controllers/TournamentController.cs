@@ -20,17 +20,21 @@ namespace szedarserver.Api.Controllers
 
         private readonly ITournamentRepository _tournamentRepository;
 
+        private readonly IDoubleEliminationService _doubleEliminationService;
+
         private readonly ISingleEliminationService _singleEliminationService;
         private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
 
         public TournamentController(ITournamentService tournamentService, 
             ISwissService swissService, 
-            ISingleEliminationService singleEliminationService, ITournamentRepository tournamentRepository)
+            ISingleEliminationService singleEliminationService, ITournamentRepository tournamentRepository,
+            IDoubleEliminationService doubleEliminationService)
         {
             _swissService = swissService;
             _tournamentService = tournamentService;
             _singleEliminationService = singleEliminationService;
             _tournamentRepository = tournamentRepository;
+            _doubleEliminationService = doubleEliminationService;
         }
 
         [HttpPost("create")]
@@ -42,7 +46,7 @@ namespace szedarserver.Api.Controllers
             {
                 case TournamentsTypes.DoubleElimination:
                 {
-                    //res = await _tournamentService.CreateDoubleEliminationTournament(tournament, UserId);
+                    res = await _doubleEliminationService.CreateDoubleElimination(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.SingleElimination:

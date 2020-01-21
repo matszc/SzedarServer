@@ -13,6 +13,8 @@ namespace szedarserver.Core.Domain
         public virtual IEnumerable<Result> Result { get; set; }
         public virtual Tournament Tournament { get; set; }
         public Guid TournamentId { get; set; }
+        
+        public Match(){}
 
         public Match(string matchCode, int round, Guid tournamentId)
         {

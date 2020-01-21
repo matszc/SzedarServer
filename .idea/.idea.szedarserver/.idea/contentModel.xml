@@ -12,6 +12,7 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="DoubleEliminationController.cs" t="Include" />
           <e p="SingleEliminationController.cs" t="Include" />
           <e p="SwissController.cs" t="Include" />
           <e p="TournamentController.cs" t="Include" />
@@ -97,6 +98,7 @@
         <e p="bin" t="ExcludeRecursive" />
         <e p="DTO" t="Include">
           <e p="AccountDTO.cs" t="Include" />
+          <e p="DoubleEliminationDTO.cs" t="Include" />
           <e p="MatchDTO.cs" t="Include" />
           <e p="NodeDTO.cs" t="Include" />
           <e p="RoundDTO.cs" t="Include" />
@@ -110,6 +112,7 @@
           <e p="JwtExtension.cs" t="Include" />
         </e>
         <e p="IServices" t="Include">
+          <e p="IDoubleEliminationService.cs" t="Include" />
           <e p="ISingleEliminationService.cs" t="Include" />
           <e p="ISwissService.cs" t="Include" />
           <e p="ITournamentService.cs" t="Include" />
@@ -123,6 +126,7 @@
           <e p="LoginModel.cs" t="Include" />
           <e p="RegisterTournamentModel.cs" t="Include" />
           <e p="SwissRoundModel.cs" t="Include" />
+          <e p="TournamentParts.cs" t="Include" />
           <e p="UserRegisterModel.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -134,6 +138,7 @@
         </e>
         <e p="Program.cs" t="Include" />
         <e p="Services" t="Include">
+          <e p="DoubleEliminationService.cs" t="Include" />
           <e p="SingleEliminationService.cs" t="Include" />
           <e p="SwissService.cs" t="Include" />
           <e p="TournamentService.cs" t="Include" />
