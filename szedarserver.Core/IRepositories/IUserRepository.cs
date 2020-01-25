@@ -13,5 +13,6 @@ namespace szedarserver.Core.IRepositories
         Task<User> GetByLoginAsync(string login);
         Task<User> GetUserAsync(User user);
         Task<User> GetUserByFbIdAsync(string fbId);
+        Task<Guid> GetUserIdByMatchId(Guid id);
     }
 }

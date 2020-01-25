@@ -11,5 +11,6 @@ namespace szedarserver.Infrastructure.IServices
     {
         Task<Tournament> CreateDoubleElimination(RegisterTournamentModel form, Guid userId);
         IEnumerable<NodeDTO> GetMatches(Guid tournamentId);
+        Task AddResult(Guid matchId, MatchDTO match);
     }
 }

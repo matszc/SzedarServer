@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using szedarserver.Core.Domain;
@@ -77,6 +78,13 @@ namespace szedarserver.Core.Repositories
             {
                 throw e;
             }
+        }
+
+        public async Task<Guid> GetUserIdByMatchId(Guid id)
+        {
+            var match =  await _context.Matches.SingleOrDefaultAsync(m => m.Id == id);
+            var tournament = await _context.Tournaments.SingleAsync(t => t.Id == match.TournamentId);
+            return tournament.UserId;
         }
     }
 }

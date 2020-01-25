@@ -1,7 +1,10 @@
 using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using szedarserver.Core.Domain;
 using szedarserver.Core.IRepositories;
+using szedarserver.Infrastructure.DTO;
 using szedarserver.Infrastructure.IServices;
 
 namespace szedarserver.Api.Controllers
@@ -10,13 +13,14 @@ namespace szedarserver.Api.Controllers
     [ApiController]
     public class DoubleEliminationController : ControllerBase
     {
-        private readonly ITournamentService _tournamentService;
         private readonly ITournamentRepository _tournamentRepository;
         private readonly IDoubleEliminationService _doubleEliminationService;
-        public DoubleEliminationController(ITournamentService tournamentService, ITournamentRepository tournamentRepository,
+        private readonly IUserRepository _userRepository;
+        private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+        public DoubleEliminationController(IUserRepository userRepository, ITournamentRepository tournamentRepository,
             IDoubleEliminationService doubleEliminationService)
         {
-            _tournamentService = tournamentService;
+            _userRepository = userRepository;
             _tournamentRepository = tournamentRepository;
             _doubleEliminationService = doubleEliminationService;
         }
@@ -38,6 +42,24 @@ namespace szedarserver.Api.Controllers
                 return NotFound();
             }
             return Ok(res);
+        }
+
+        [HttpPost("match/{id}")]
+        [Authorize]
+        public async Task<IActionResult> AddResult(Guid id, [FromBody] MatchDTO match)
+        {
+            var ownerId = _userRepository.GetUserIdByMatchId(id);
+            if (ownerId.Result != UserId)
+            {
+                return Forbid();
+            }
+            if (match.Player2Score == match.Player1Score)
+            {
+                return BadRequest("Match can't be draw");
+            }
+
+            await _doubleEliminationService.AddResult(id, match);
+            return Ok();
         }
         
         private bool CheckTournament(Guid id)

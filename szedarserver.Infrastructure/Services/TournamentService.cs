@@ -1,9 +1,10 @@
-using System.Threading.Tasks;
 using szedarserver.Infrastructure.IServices;
 using szedarserver.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using szedarserver.Core.Domain;
 using szedarserver.Core.IRepositories;
@@ -15,11 +16,14 @@ namespace szedarserver.Infrastructure.Services
     {
         private readonly ITournamentRepository _tournamentRepository;
         private readonly IMapper _mapper;
+        private readonly ITreeRepository _treeRepository;
 
-        public TournamentService(ITournamentRepository tournamentRepository, IMapper mapper)
+        public TournamentService(ITournamentRepository tournamentRepository, IMapper mapper,
+            ITreeRepository treeRepository)
         {
             _tournamentRepository = tournamentRepository;
             _mapper = mapper;
+            _treeRepository = treeRepository;
         }
 
         public IEnumerable<TournamentDTO> GetAllUserTournaments(Guid userId)
@@ -103,6 +107,125 @@ namespace szedarserver.Infrastructure.Services
                 Results = results.Concat(newResults),
                 Players = players
             };
+        }
+        
+        public IEnumerable<NodeDTO> GetFlatStructure(Tournament tournament)
+        {
+            var res = new List<NodeDTO>();
+            foreach (var match in tournament.Matches)
+            {
+                var node = new NodeDTO()
+                {
+                    Id = match.Id,
+                    MatchCode = match.MatchCode,
+                    Round = match.Round,
+                    EditAble = match.Result.Count() == 2,
+                    NextMatch = match.NextMachCode != null
+                        ? CreateNode(tournament, match.NextMachCode, true)
+                        : null,
+                };
+                if (match.Result.Any())
+                {
+                    node.Player1 = match.Result.First().Player.Nick;
+                    node.Player1Score = match.Result.First().Score;
+                }
+
+                if (match.Result.Count() > 1)
+                {
+                    node.Player2Score = match.Result.Last().Score;
+                    node.Player2 = match.Result.Last().Player.Nick;
+                }
+
+                res.Add(node);
+            }
+
+            return res;
+        }
+
+        public async Task UpdateSingleEliminationTree(MatchDTO matchDto)
+        {
+            var match = _tournamentRepository.GetMatch(matchDto.Id);
+            
+            var nextMatch = _treeRepository.GetMatchByCode(match.NextMachCode, match.TournamentId);
+            
+            if (match.Result.Count() != 2 || matchDto.Player1Score == matchDto.Player2Score
+                                          || (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.Win) != null))
+            {
+                throw new ValidationException("Can't update this match");
+            }
+            var p1 = match.Result.Single(r => r.Player.Nick == matchDto.Player1);
+            var p2 = match.Result.Single(r => r.Player.Nick == matchDto.Player2);
+            
+            p1.Score = matchDto.Player1Score;
+            p1.Win = matchDto.Player1Score > matchDto.Player2Score;
+            
+            p2.Score = matchDto.Player2Score;
+            p2.Win = matchDto.Player1Score < matchDto.Player2Score;
+
+            await _tournamentRepository.UpdateResult(p1, p2);
+
+            var winner = matchDto.Player1Score > matchDto.Player2Score ? p1 : p2;
+
+            if (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null)
+            {
+                await _tournamentRepository.DeleteResult(nextMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
+            }
+            
+            var result = new Result(winner.PlayerId, nextMatch.Id){};
+
+            await _tournamentRepository.AddResult(result);
+        }
+
+        private NodeDTO CreateNode(Tournament tournament, string matchCode, bool recursionFlag)
+        {
+            if (!recursionFlag)
+            {
+                return null;
+            }
+
+            var match = tournament.Matches.First(m => m.MatchCode == matchCode);
+            if (match.NextMachCode != null)
+            {
+                var p1 = match.Result.FirstOrDefault()?.Player.Nick;
+                var p1Score = match.Result.FirstOrDefault()?.Score;
+                var p2 = match.Result.LastOrDefault()?.Player.Nick;
+                var p2Score = match.Result.LastOrDefault()?.Score;
+
+                return new NodeDTO()
+                {
+                    MatchCode = match.MatchCode,
+                    Id = match.Id,
+                    Round = match.Round,
+                    Player1 = p1,
+                    Player1Score = p1Score != null ? p1Score.Value : 0,
+                    Player2 = p1 != p2 ? p2 : null,
+                    Player2Score = p1 != p2 ? p2Score != null ? p2Score.Value : 0 : 0,
+                    EditAble = match.EditAble,
+                    NextMatch = CreateNode(tournament, match.NextMachCode, false)
+                };
+            }
+
+            var lastNode = new NodeDTO()
+            {
+                MatchCode = match.MatchCode,
+                Id = match.Id,
+                Round = match.Round,
+                EditAble = match.EditAble,
+            };
+
+            if (match.Result.Any())
+            {
+                lastNode.Player1 = match.Result.First().Player.Nick;
+                lastNode.Player1Score = match.Result.First().Score;
+            }
+
+            if (match.Result.Count() > 1)
+            {
+                lastNode.Player2Score = match.Result.Last().Score;
+                lastNode.Player2 = match.Result.Last().Player.Nick;
+            }
+
+            return lastNode;
         }
 
         private List<Match> CreateMatches(int numberOfPlayers, Guid tournamentId)
