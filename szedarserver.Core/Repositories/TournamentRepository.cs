@@ -87,5 +87,15 @@ namespace szedarserver.Core.Repositories
             _context.Results.Remove(result);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddResultsAsync(IEnumerable<Result> results)
+        {
+            foreach (var result in results)
+            {
+                _context.Results.Add(result);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

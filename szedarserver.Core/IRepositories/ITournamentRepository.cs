@@ -20,5 +20,7 @@ namespace szedarserver.Core.IRepositories
 
         Task DeleteResult(Result result);
 
+        Task AddResultsAsync(IEnumerable<Result> results);
+
     }
 }

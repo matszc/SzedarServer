@@ -10,5 +10,6 @@ namespace szedarserver.Infrastructure.DTO
         public string Player2 { get; set; }
         public int Player2Score { get; set; }
         public bool EditAble { get; set; }
+        public string FromLowerBracket { get; set; }
     }
 }

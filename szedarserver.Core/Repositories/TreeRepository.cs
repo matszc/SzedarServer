@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,12 @@ namespace szedarserver.Core.Repositories
                 .Include(b => b.Result)
                 .ThenInclude(r => r.Player)
                 .SingleOrDefault();
+        }
+
+        public List<Match> GetAllMatches(Guid tournamentId)
+        {
+            return _context.Matches.Where(m => m.TournamentId == tournamentId)
+                .Include(b => b.Result).ToList();
         }
     }
 }
