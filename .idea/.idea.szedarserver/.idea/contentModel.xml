@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Mateusz\.Rider2019.3\config\consoles\db" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\config\Extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Mateusz\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_szedarserver.430962520.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Mateusz\Desktop\SzedarServer" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="szedarserver.Api" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="DoubleEliminationController.cs" t="Include" />
+          <e p="SingleEliminationController.cs" t="Include" />
+          <e p="SwissController.cs" t="Include" />
+          <e p="TournamentController.cs" t="Include" />
+          <e p="UserController.cs" t="Include" />
+        </e>
+        <e p="Migrations" t="Include">
+          <e p="20191019202827_initial.cs" t="Include" />
+          <e p="20191019202827_initial.Designer.cs" t="Include" />
+          <e p="20191103163613_InitialCreate.cs" t="Include" />
+          <e p="20191103163613_InitialCreate.Designer.cs" t="Include" />
+          <e p="20191110182546_AddFbUsers.cs" t="Include" />
+          <e p="20191110182546_AddFbUsers.Designer.cs" t="Include" />
+          <e p="20191118202955_Create Tournaments Entity.cs" t="Include" />
+          <e p="20191118202955_Create Tournaments Entity.Designer.cs" t="Include" />
+          <e p="20191118210057_Test Matches schema.cs" t="Include" />
+          <e p="20191118210057_Test Matches schema.Designer.cs" t="Include" />
+          <e p="20191118211016_Update matches saveing schema.cs" t="Include" />
+          <e p="20191118211016_Update matches saveing schema.Designer.cs" t="Include" />
+          <e p="20191118211217_Add Score field to result.cs" t="Include" />
+          <e p="20191118211217_Add Score field to result.Designer.cs" t="Include" />
+          <e p="20191128191334_change torunaments schema.cs" t="Include" />
+          <e p="20191128191334_change torunaments schema.Designer.cs" t="Include" />
+          <e p="20191130183057_add ids in Results entity.cs" t="Include" />
+          <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
+          <e p="20191201190236_rename columns.cs" t="Include" />
+          <e p="20191201190236_rename columns.Designer.cs" t="Include" />
+          <e p="20191222133642_Add EditAble to match.cs" t="Include" />
+          <e p="20191222133642_Add EditAble to match.Designer.cs" t="Include" />
+          <e p="20200115145625_Add loser match code.cs" t="Include" />
+          <e p="20200115145625_Add loser match code.Designer.cs" t="Include" />
+          <e p="DataBaseContextModelSnapshot.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="szedarserver.Api.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+          <e p="PublishProfiles" t="Include">
+            <e p="FolderProfile.pubxml" t="Include" />
+          </e>
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="szedarserver.Api.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="szedarserver.Core" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Domain" t="Include">
+          <e p="Context" t="Include">
+            <e p="DataBaseContext.cs" t="Include" />
+          </e>
+          <e p="EntityGuid.cs" t="Include" />
+          <e p="Match.cs" t="Include" />
+          <e p="Player.cs" t="Include" />
+          <e p="Result.cs" t="Include" />
+          <e p="Tournament.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+        </e>
+        <e p="IRepositories" t="Include">
+          <e p="ISwissRepository.cs" t="Include" />
+          <e p="ITournamentRepository.cs" t="Include" />
+          <e p="ITreeRepository.cs" t="Include" />
+          <e p="IUserRepository.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="szedarserver.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Repositories" t="Include">
+          <e p="SwissRepository.cs" t="Include" />
+          <e p="TournamentRepository.cs" t="Include" />
+          <e p="TreeRepository.cs" t="Include" />
+          <e p="UserRepository.cs" t="Include" />
+        </e>
+        <e p="szedarserver.Core.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="szedarserver.Infrastructure" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DTO" t="Include">
+          <e p="AccountDTO.cs" t="Include" />
+          <e p="DoubleEliminationDTO.cs" t="Include" />
+          <e p="MatchDTO.cs" t="Include" />
+          <e p="NodeDTO.cs" t="Include" />
+          <e p="RoundDTO.cs" t="Include" />
+          <e p="SwissDTO.cs" t="Include" />
+          <e p="SwissTableDTO.cs" t="Include" />
+          <e p="TournamentDTO.cs" t="Include" />
+        </e>
+        <e p="Extensions" t="Include">
+          <e p="HashExtension.cs" t="Include" />
+          <e p="IJwtExtension.cs" t="Include" />
+          <e p="JwtExtension.cs" t="Include" />
+        </e>
+        <e p="IServices" t="Include">
+          <e p="IDoubleEliminationService.cs" t="Include" />
+          <e p="ISingleEliminationService.cs" t="Include" />
+          <e p="ISwissService.cs" t="Include" />
+          <e p="ITournamentService.cs" t="Include" />
+          <e p="IUserService.cs" t="Include" />
+        </e>
+        <e p="MappingProfile" t="Include">
+          <e p="MappingProfile.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="FbUserModel.cs" t="Include" />
+          <e p="LoginModel.cs" t="Include" />
+          <e p="RegisterTournamentModel.cs" t="Include" />
+          <e p="SwissRoundModel.cs" t="Include" />
+          <e p="TournamentParts.cs" t="Include" />
+          <e p="UserRegisterModel.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="szedarserver.Infrastructure.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="DoubleEliminationService.cs" t="Include" />
+          <e p="SingleEliminationService.cs" t="Include" />
+          <e p="SwissService.cs" t="Include" />
+          <e p="TournamentService.cs" t="Include" />
+          <e p="UserService.cs" t="Include" />
+        </e>
+        <e p="Setting" t="Include">
+          <e p="JwtSettings.cs" t="Include" />
+        </e>
+        <e p="szedarserver.Infrastructure.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="szedarserver.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>

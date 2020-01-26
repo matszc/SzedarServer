@@ -1,0 +1,13 @@
+using szedarserver.Core.Domain;
+
+namespace szedarserver.Infrastructure.Models
+
+{
+    public class RegisterTournamentModel
+    {
+        public string Name { get; set; }
+        public TournamentsTypes Type { get; set; }
+        public string[] Players { get; set; }
+        public int Rounds { get; set; }
+    }
+}

@@ -6,3 +6,8 @@
 /.vs/szedarserver
 /szedarserver.Api/obj
 /szedarserver.Infrastructure/obj
+*.dll
+/bin
+/szedarserver.Api/bin/Debug/netcoreapp3.0
+/szedarserver.Core/bin/Debug/netcoreapp3.0
+/szedarserver.Infrastructure/bin/Debug/netcoreapp3.0
