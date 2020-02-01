@@ -13,7 +13,6 @@ namespace szedarserver.Core.Domain
         [Required]
         [MaxLength(20)]
         public string Login { get; set; }
-
         public string FbId { get; set; }
         
         public virtual IEnumerable<Tournament> Tournaments { get; set; }

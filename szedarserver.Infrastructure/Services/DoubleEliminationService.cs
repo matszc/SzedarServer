@@ -174,6 +174,57 @@ namespace szedarserver.Infrastructure.Services
             }
         }
 
+        public async Task StartTournament(Tournament tournament)
+        {
+            var upperBracket = _tournamentService.StartUpperTree(tournament);
+
+            var lowerMatches = CreateLowerTree(tournament.Players.Count(), tournament.Id);
+
+            upperBracket.Matches.OrderBy(m => m.MatchCode).Last().NextMachCode = "Final1";
+
+            var finalMatches = new List<Match>();
+
+            finalMatches.Add(new Match()
+            {
+                MatchCode = "Final1",
+                TournamentId = tournament.Id,
+                Round = tournament.NumberOfRounds + 1,
+                NextMachCode = "Final2"
+            });
+            finalMatches.Add(new Match()
+            {
+                Round = tournament.NumberOfRounds + 2,
+                MatchCode = "Final2",
+                TournamentId = tournament.Id
+            });
+
+            var lowerMatchesCopy = new List<Match>(lowerMatches);
+
+            foreach (var match in upperBracket.Matches)
+            {
+                var lowerMatch =
+                    lowerMatchesCopy.Find(m => match.Round == 1 ? m.Round == 1 : m.Round == (match.Round - 1) * 2);
+                if (match.Round == 1)
+                {
+                    match.NextLoserMatchCode = lowerMatch.MatchCode;
+                    var lowerMatchesWithCode =
+                        upperBracket.Matches.Where(m => m.NextLoserMatchCode == lowerMatch.MatchCode);
+                    if (lowerMatchesWithCode.Count() > 1)
+                    {
+                        lowerMatchesCopy.Remove(lowerMatch);
+                    }
+                }
+                else
+                {
+                    match.NextLoserMatchCode = lowerMatch.MatchCode;
+                    lowerMatchesCopy.Remove(lowerMatch);
+                }
+            }
+
+            await _tournamentRepository.StartTournament(tournament, upperBracket.Matches.Concat(lowerMatches),
+                upperBracket.Results);
+        }
+
         private List<Result> CheckLoserMatches(Match baseMatch, List<Match> matches,Guid playerId, List<Result> results)
         {
             if (baseMatch.Round == 2)

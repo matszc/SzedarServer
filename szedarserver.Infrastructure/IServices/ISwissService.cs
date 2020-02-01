@@ -14,5 +14,6 @@ namespace szedarserver.Infrastructure.IServices
         Task AddResultAsync(Guid matchId, MatchDTO match);
 
         Task MoveNextRound(Guid tournamentId);
+        Task StartTournament(Tournament tournament);
     }
 }

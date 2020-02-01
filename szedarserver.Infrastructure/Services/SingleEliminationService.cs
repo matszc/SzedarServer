@@ -48,5 +48,10 @@ namespace szedarserver.Infrastructure.Services
             return _tournamentService.GetFlatStructure(tournament).OrderBy(t => t.MatchCode);
         }
 
+        public async Task StartTournament(Tournament tournament)
+        {
+            var tournamentParts = _tournamentService.StartUpperTree(tournament);
+            await _tournamentRepository.StartTournament(tournament, tournamentParts.Matches, tournamentParts.Results);
+        }
     }
 }

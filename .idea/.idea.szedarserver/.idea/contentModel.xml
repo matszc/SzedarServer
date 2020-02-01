@@ -41,8 +41,10 @@
           <e p="20191201190236_rename columns.Designer.cs" t="Include" />
           <e p="20191222133642_Add EditAble to match.cs" t="Include" />
           <e p="20191222133642_Add EditAble to match.Designer.cs" t="Include" />
-          <e p="20200115145625_Add loser match code.cs" t="Include" />
-          <e p="20200115145625_Add loser match code.Designer.cs" t="Include" />
+          <e p="20200201125245_add torunament changes.cs" t="Include" />
+          <e p="20200201125245_add torunament changes.Designer.cs" t="Include" />
+          <e p="20200201130814_add open properties to tournament.cs" t="Include" />
+          <e p="20200201130814_add open properties to tournament.Designer.cs" t="Include" />
           <e p="DataBaseContextModelSnapshot.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">

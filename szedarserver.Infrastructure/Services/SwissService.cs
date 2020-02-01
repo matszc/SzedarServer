@@ -105,6 +105,12 @@ namespace szedarserver.Infrastructure.Services
             await _swissRepository.MoveNextRound(tournamentId, tournament.CurrentRound);
         }
 
+        public async Task StartTournament(Tournament tournament)
+        {
+            var firstRound = GenerateFirstRound(tournament);
+            await _tournamentRepository.StartTournament(tournament, firstRound.Matches, firstRound.Results);
+        }
+
         private IEnumerable<RoundDTO> GetRounds(Tournament tournament)
         {
             var res = new List<RoundDTO>();

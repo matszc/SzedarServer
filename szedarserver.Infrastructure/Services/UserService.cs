@@ -23,11 +23,14 @@ namespace szedarserver.Infrastructure.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IJwtExtension _jwtExtension;
-        public UserService(IUserRepository userRepository, IMapper mapper, IJwtExtension jwtExtension)
+        private readonly ITournamentRepository _tournamentRepository;
+        public UserService(IUserRepository userRepository, IMapper mapper, IJwtExtension jwtExtension,
+            ITournamentRepository tournamentRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtExtension = jwtExtension;
+            _tournamentRepository = tournamentRepository;
         }
 
         public async Task<AccountDTO> LoginAsync(LoginModel user)
@@ -57,6 +60,25 @@ namespace szedarserver.Infrastructure.Services
             var account = _mapper.Map<AccountDTO>(userFromDb);
             account.Token = _jwtExtension.CreateToken(account);
             return account;
+        }
+
+        public IEnumerable<TournamentDTO> GetAllAvailableTournaments(Guid userId, GameTypes gameType)
+        {
+            var tournaments = _userRepository.GetAllTournaments(userId, gameType);         
+            var res = new List<TournamentDTO>();
+
+            foreach (var tournament in tournaments)
+            {
+                res.Add(_mapper.Map<TournamentDTO>(tournament));
+            }
+
+            return res;
+        }
+
+        public async Task JoinTournament(Guid userId, Tournament tournament)
+        {
+            var user = _userRepository.GetUserById(userId);
+            await _userRepository.AddPlayerToTournament(new Player(user.Login, tournament, userId));
         }
 
         public async Task RegisterAsync(UserRegisterModel user)

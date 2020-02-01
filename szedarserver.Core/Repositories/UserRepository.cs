@@ -68,6 +68,11 @@ namespace szedarserver.Core.Repositories
             }
         }
 
+        public User GetUserById(Guid id)
+        {
+            return _context.Users.SingleOrDefault(u => u.Id == id);
+        }
+
         public async Task<User> GetUserByFbIdAsync(string fbId)
         {
             try
@@ -85,6 +90,17 @@ namespace szedarserver.Core.Repositories
             var match =  await _context.Matches.SingleOrDefaultAsync(m => m.Id == id);
             var tournament = await _context.Tournaments.SingleAsync(t => t.Id == match.TournamentId);
             return tournament.UserId;
+        }
+
+        public IEnumerable<Tournament> GetAllTournaments(Guid userId, GameTypes gameType)
+        {
+            return _context.Tournaments.Where(t => t.UserId != userId && t.Open && (t.GameType != GameTypes.All? t.GameType == gameType: true)).ToList();
+        }
+
+        public async Task AddPlayerToTournament(Player player)
+        {
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
         }
     }
 }
