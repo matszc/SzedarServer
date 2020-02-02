@@ -13,8 +13,10 @@ using AutoMapper;
 using szedarserver.Infrastructure.Models;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace szedarserver.Infrastructure.Services
 {
@@ -69,7 +71,9 @@ namespace szedarserver.Infrastructure.Services
 
             foreach (var tournament in tournaments)
             {
-                res.Add(_mapper.Map<TournamentDTO>(tournament));
+                var item = _mapper.Map<TournamentDTO>(tournament);
+                item.NumberOfPlayers = tournament.Players.Count();
+                res.Add(item);
             }
 
             return res;
@@ -79,6 +83,15 @@ namespace szedarserver.Infrastructure.Services
         {
             var user = _userRepository.GetUserById(userId);
             await _userRepository.AddPlayerToTournament(new Player(user.Login, tournament, userId));
+        }
+
+        public IEnumerable<RankingDTO> GetPlayersRanking(Guid userId)
+        {
+            var userTournaments = _tournamentRepository.GetAllUserTournaments(userId);
+            var tournamentsIds = userTournaments.Select(p => p.Id);
+            var players = _userRepository.GetAllUserPlayers(tournamentsIds);
+
+            return CreateRanking(players);
         }
 
         public async Task RegisterAsync(UserRegisterModel user)
@@ -101,6 +114,54 @@ namespace szedarserver.Infrastructure.Services
             var newUser = new User(user.Email, HashExtension.HashPassword(user.Password), user.Login);
             await _userRepository.AddUserAsync(newUser);
 
+        }
+
+        private List<RankingDTO> CreateRanking(List<Player> players)
+        {
+            var res = new List<RankingDTO>();
+            var uniquePlayers = players.GroupBy(p => p.Nick)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (var player in uniquePlayers)
+            {
+                var samePlayers = players.FindAll(p => p.Nick == player.Nick);
+                var results = samePlayers.SelectMany(p => p.Results).ToList();
+                var resultsId = results.Select(r => r.Id);
+
+                res.Add( new RankingDTO()
+                {
+                    Id = player.Id,
+                    Player = player.Nick,
+                    MatchesWon = results.FindAll(r => r.Win).Count,
+                    Wins = results.Select(r => r.Score).Sum(),
+                    Points = results.FindAll(r => r.Win).Count * 2,
+                    Losses = results.FindAll(r => !r.Win && r.Match.Result
+                                                      .SingleOrDefault(s => !resultsId.Contains(s.Id)) != null)
+                        .FindAll(m => m.Match.Result.Single(r => !resultsId.Contains(r.Id)).Win).Count(),
+                    MatchesLost = results.FindAll(r => !r.Win && r.Match.Result
+                                                           .SingleOrDefault(s => !resultsId.Contains(s.Id)) != null)
+                        .FindAll(m => m.Match.Result.Single(u => !resultsId.Contains(u.Id)) != null)
+                        .Select(z => z.Score).Sum(),
+                });
+            }
+
+            var i = 1;
+
+            RankingDTO prevItem = null;
+            
+            foreach (var item in res.OrderBy(r => r.Points))
+            {
+                item.Position = i;
+                if (prevItem != null && prevItem.Points < item.Points)
+                {
+                    i++;
+                }
+
+                prevItem = item;
+            }
+
+            return res;
         }
 
     }

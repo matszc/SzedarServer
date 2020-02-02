@@ -16,5 +16,6 @@ namespace szedarserver.Infrastructure.IServices
         Task<AccountDTO> LoginFbAsync(FbUserModel user);
         IEnumerable<TournamentDTO> GetAllAvailableTournaments(Guid userId, GameTypes gameType);
         Task JoinTournament(Guid userId, Tournament tournament);
+        IEnumerable<RankingDTO> GetPlayersRanking(Guid userId);
     }
 }

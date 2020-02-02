@@ -17,5 +17,6 @@ namespace szedarserver.Core.IRepositories
         Task<Guid> GetUserIdByMatchId(Guid id);
         IEnumerable<Tournament> GetAllTournaments(Guid userId, GameTypes gameType);
         Task AddPlayerToTournament(Player user);
+        List<Player> GetAllUserPlayers(IEnumerable<Guid> userIds);
     }
 }

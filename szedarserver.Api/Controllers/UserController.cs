@@ -61,8 +61,11 @@ namespace szedarserver.Api.Controllers
         public async Task<IActionResult> JoinTournament(Guid tournamentId)
         {
             var tournament = _tournamentRepository.GetTournamentWithPlayers(tournamentId);
+
+            var userInTournament = tournament.Players.SingleOrDefault(p => p.UserId == UserId);
+            
             if (!tournament.Open || tournament.UserId == UserId ||
-                tournament.MaxNumberOfPlayers == tournament.Players.Count())
+                tournament.MaxNumberOfPlayers == tournament.Players.Count() || userInTournament != null)
             {
                 return Forbid("You can't join this tournament");
             }
@@ -70,6 +73,12 @@ namespace szedarserver.Api.Controllers
             await _userService.JoinTournament(UserId, tournament);
 
             return Ok();
+        }
+
+        [HttpGet("ranking/{id}")]
+        public IActionResult GetPlayersRanking(Guid id)
+        {
+            return Ok(_userService.GetPlayersRanking(id));
         }
     }
 }

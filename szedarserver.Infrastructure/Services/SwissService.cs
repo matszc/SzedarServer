@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
 using szedarserver.Core.Domain;
 using szedarserver.Core.IRepositories;
@@ -17,11 +18,13 @@ namespace szedarserver.Infrastructure.Services
     {
         private readonly ISwissRepository _swissRepository;
         private readonly ITournamentRepository _tournamentRepository;
+        private readonly IMapper _mapper;
 
-        public SwissService(ISwissRepository swissRepository, ITournamentRepository tournamentRepository)
+        public SwissService(ISwissRepository swissRepository, ITournamentRepository tournamentRepository, IMapper mapper)
         {
             _tournamentRepository = tournamentRepository;
             _swissRepository = swissRepository;
+            _mapper = mapper;
         }
 
         public async Task<Tournament> CreateSwissTournamentAsync(RegisterTournamentModel tournament, Guid userId)
@@ -107,7 +110,8 @@ namespace szedarserver.Infrastructure.Services
 
         public async Task StartTournament(Tournament tournament)
         {
-            var firstRound = GenerateFirstRound(tournament);
+            var t = _mapper.Map<Tournament>(tournament);
+            var firstRound = GenerateFirstRound(t);
             await _tournamentRepository.StartTournament(tournament, firstRound.Matches, firstRound.Results);
         }
 

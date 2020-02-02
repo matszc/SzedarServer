@@ -9,6 +9,7 @@ namespace szedarserver.Core.Domain
         public string Nick { get; set; }
         public virtual IEnumerable<Result> Results { get; set; }
         public Tournament Tournament { get; set; }
+        public Guid TournamentId { get; set; }
         public Guid UserId { get; set; }
 
 

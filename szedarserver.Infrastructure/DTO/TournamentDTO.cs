@@ -15,6 +15,8 @@ namespace szedarserver.Infrastructure.DTO
         public int MaxNumberOfPlayers { get; set; }
         public int NumberOfPlayers { get; set; }
         public bool Open { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
         
     }
 }

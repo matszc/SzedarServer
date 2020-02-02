@@ -94,13 +94,28 @@ namespace szedarserver.Core.Repositories
 
         public IEnumerable<Tournament> GetAllTournaments(Guid userId, GameTypes gameType)
         {
-            return _context.Tournaments.Where(t => t.UserId != userId && t.Open && (t.GameType != GameTypes.All? t.GameType == gameType: true)).ToList();
+            if (gameType == GameTypes.All)
+            {
+                return _context.Tournaments.Where(t => t.UserId != userId && t.Open)
+                    .Include(p => p.Players).ToList();
+            }
+
+            return _context.Tournaments.Where(t => t.UserId != userId && t.Open && t.GameType == gameType)
+                .Include(p => p.Players).ToList();
         }
 
         public async Task AddPlayerToTournament(Player player)
         {
             _context.Players.Add(player);
             await _context.SaveChangesAsync();
+        }
+
+        public List<Player> GetAllUserPlayers(IEnumerable<Guid> tournamentsIds)
+        {
+            return _context.Players.Where(p => tournamentsIds.Contains(p.TournamentId))
+                .Include(r => r.Results)
+                .ThenInclude(m => m.Match)
+                .ThenInclude(i => i.Result).ToList();
         }
     }
 }

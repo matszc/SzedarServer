@@ -18,35 +18,6 @@
           <e p="TournamentController.cs" t="Include" />
           <e p="UserController.cs" t="Include" />
         </e>
-        <e p="Migrations" t="Include">
-          <e p="20191019202827_initial.cs" t="Include" />
-          <e p="20191019202827_initial.Designer.cs" t="Include" />
-          <e p="20191103163613_InitialCreate.cs" t="Include" />
-          <e p="20191103163613_InitialCreate.Designer.cs" t="Include" />
-          <e p="20191110182546_AddFbUsers.cs" t="Include" />
-          <e p="20191110182546_AddFbUsers.Designer.cs" t="Include" />
-          <e p="20191118202955_Create Tournaments Entity.cs" t="Include" />
-          <e p="20191118202955_Create Tournaments Entity.Designer.cs" t="Include" />
-          <e p="20191118210057_Test Matches schema.cs" t="Include" />
-          <e p="20191118210057_Test Matches schema.Designer.cs" t="Include" />
-          <e p="20191118211016_Update matches saveing schema.cs" t="Include" />
-          <e p="20191118211016_Update matches saveing schema.Designer.cs" t="Include" />
-          <e p="20191118211217_Add Score field to result.cs" t="Include" />
-          <e p="20191118211217_Add Score field to result.Designer.cs" t="Include" />
-          <e p="20191128191334_change torunaments schema.cs" t="Include" />
-          <e p="20191128191334_change torunaments schema.Designer.cs" t="Include" />
-          <e p="20191130183057_add ids in Results entity.cs" t="Include" />
-          <e p="20191130183057_add ids in Results entity.Designer.cs" t="Include" />
-          <e p="20191201190236_rename columns.cs" t="Include" />
-          <e p="20191201190236_rename columns.Designer.cs" t="Include" />
-          <e p="20191222133642_Add EditAble to match.cs" t="Include" />
-          <e p="20191222133642_Add EditAble to match.Designer.cs" t="Include" />
-          <e p="20200201125245_add torunament changes.cs" t="Include" />
-          <e p="20200201125245_add torunament changes.Designer.cs" t="Include" />
-          <e p="20200201130814_add open properties to tournament.cs" t="Include" />
-          <e p="20200201130814_add open properties to tournament.Designer.cs" t="Include" />
-          <e p="DataBaseContextModelSnapshot.cs" t="Include" />
-        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.0" t="Include">
@@ -106,6 +77,7 @@
           <e p="DoubleEliminationDTO.cs" t="Include" />
           <e p="MatchDTO.cs" t="Include" />
           <e p="NodeDTO.cs" t="Include" />
+          <e p="RankingDTO.cs" t="Include" />
           <e p="RoundDTO.cs" t="Include" />
           <e p="SwissDTO.cs" t="Include" />
           <e p="SwissTableDTO.cs" t="Include" />
