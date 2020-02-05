@@ -17,5 +17,6 @@ namespace szedarserver.Infrastructure.IServices
         IEnumerable<TournamentDTO> GetAllAvailableTournaments(Guid userId, GameTypes gameType);
         Task JoinTournament(Guid userId, Tournament tournament);
         IEnumerable<RankingDTO> GetPlayersRanking(Guid userId);
+        ProfileDTO GetUserProfile(User user);
     }
 }

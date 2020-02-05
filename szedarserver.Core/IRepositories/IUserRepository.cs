@@ -10,7 +10,7 @@ namespace szedarserver.Core.IRepositories
     {
         Task AddUserAsync(User user);
         Task<User> GetByEmailAsync(string email);
-        Task<User> GetByLoginAsync(string login);
+        User GetByLogin(string login);
         Task<User> GetUserAsync(User user);
         User GetUserById(Guid id);
         Task<User> GetUserByFbIdAsync(string fbId);
@@ -18,5 +18,8 @@ namespace szedarserver.Core.IRepositories
         IEnumerable<Tournament> GetAllTournaments(Guid userId, GameTypes gameType);
         Task AddPlayerToTournament(Player user);
         List<Player> GetAllUserPlayers(IEnumerable<Guid> userIds);
+        List<Tournament> GetAllUserTournaments(Guid userId);
+        List<Player> GetAllPlayerByUserId(Guid userId);
+        Task DeletePlayer(Guid tournamentId, Guid userId);
     }
 }

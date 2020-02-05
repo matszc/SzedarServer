@@ -94,6 +94,37 @@ namespace szedarserver.Infrastructure.Services
             return CreateRanking(players);
         }
 
+        public ProfileDTO GetUserProfile(User user)
+        {
+            var userTournaments = _userRepository.GetAllUserTournaments(user.Id);
+            
+            var pastTournaments = userTournaments.Where(t => !t.Open).ToList();
+            var futureTournaments = userTournaments.Where(t => t.Open).ToList();
+
+            var pastTournamentsDto = new List<TournamentDTO>();
+            var futureTournamentsDto = new List<TournamentDTO>();
+
+            foreach (var tournament in pastTournaments)
+            {
+                pastTournamentsDto.Add(_mapper.Map<TournamentDTO>(tournament));
+            }
+
+            foreach (var tournament in futureTournaments)
+            {
+                futureTournamentsDto.Add(_mapper.Map<TournamentDTO>(tournament));
+            }
+
+            var userGames = _userRepository.GetAllPlayerByUserId(user.Id);
+            return new ProfileDTO()
+            {
+                UserId = user.Id,
+                Nick = user.Login,
+                PastTournaments = pastTournamentsDto,
+                UpComingTournament = futureTournamentsDto,
+                PastMatches = GenerateUserMatchHistory(userGames)
+            };
+        }
+
         public async Task RegisterAsync(UserRegisterModel user)
         {
             var userFromDbByLogin = await _userRepository.GetByEmailAsync(user.Email);
@@ -101,7 +132,7 @@ namespace szedarserver.Infrastructure.Services
             {
                 throw new ValidationException("Login already exists");
             }
-            var userFromDbByEmail = await _userRepository.GetByLoginAsync(user.Login);
+            var userFromDbByEmail = _userRepository.GetByLogin(user.Login);
             if(userFromDbByEmail != null)
             {
                 throw new ValidationException("Email already exists");
@@ -146,19 +177,43 @@ namespace szedarserver.Infrastructure.Services
                 });
             }
 
-            var i = 1;
+            var resSorted = res.OrderBy(p => p.Points).Reverse().ToList();
 
-            RankingDTO prevItem = null;
-            
-            foreach (var item in res.OrderBy(r => r.Points))
+            var position = 1;
+
+            for (int i = 0; i < resSorted.Count; i++)
             {
-                item.Position = i;
-                if (prevItem != null && prevItem.Points < item.Points)
+                resSorted[i].Position = position;
+                if (i < resSorted.Count -1 && resSorted[i].Points > resSorted[i + 1].Points)
                 {
-                    i++;
+                    position++;
                 }
+            }
 
-                prevItem = item;
+            return resSorted;
+        }
+
+        private List<MatchDTO> GenerateUserMatchHistory(IEnumerable<Player> players)
+        {
+            var res = new List<MatchDTO>();
+
+            foreach (var player in players)
+            {
+                foreach (var result in player.Results)
+                {
+                    if (result.Match.Result.Count() != 2)
+                    {
+                        continue;
+                    }
+                    res.Add(new MatchDTO()
+                    {
+                        Id = result.MatchId,
+                        Player1 = player.Nick,
+                        Player1Score = result.Score,
+                        Player2 = result.Match.Result.Single(r => r.Id != result.Id).Player.Nick,
+                        Player2Score = result.Match.Result.Single(r => r.Id != result.Id).Score,
+                    });
+                }
             }
 
             return res;

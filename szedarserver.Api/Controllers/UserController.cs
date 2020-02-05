@@ -19,10 +19,12 @@ namespace szedarserver.Api.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITournamentRepository _tournamentRepository;
+        private readonly IUserRepository _userRepository;
         private Guid UserId => User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-        public UserController(IUserService userService, ITournamentRepository tournamentRepository)
+        public UserController(IUserService userService, ITournamentRepository tournamentRepository, IUserRepository userRepository)
         {
             _userService = userService;
+            _userRepository = userRepository;
             _tournamentRepository = tournamentRepository;
         }
         [HttpPost("register")]
@@ -79,6 +81,33 @@ namespace szedarserver.Api.Controllers
         public IActionResult GetPlayersRanking(Guid id)
         {
             return Ok(_userService.GetPlayersRanking(id));
+        }
+
+        [HttpGet("profile")]
+        public IActionResult GetProfile([FromQuery(Name = "nick")] string nick, [FromQuery(Name = "id")] Guid id)
+        {
+            var user = id == Guid.Empty ? _userRepository.GetByLogin(nick) : _userRepository.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(_userService.GetUserProfile(user));
+        }
+
+        [HttpDelete("join/{id}")]
+        [Authorize]
+        public async Task<IActionResult> LeaveTournament(Guid id)
+        {
+            var tournament = _tournamentRepository.GetTournamentWithPlayers(id);
+            if (tournament.Players.SingleOrDefault(p => p.UserId == UserId) == null)
+            {
+                return BadRequest("Users not in tournament");
+            }
+
+            await _userRepository.DeletePlayer(tournament.Id, UserId);
+            
+            return Ok();
         }
     }
 }
