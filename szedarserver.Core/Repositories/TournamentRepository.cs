@@ -52,7 +52,8 @@ namespace szedarserver.Core.Repositories
 
         public IEnumerable<Tournament> GetAllUserTournaments(Guid userId)
         {
-            return _context.Tournaments.Where(t => t.UserId == userId);
+            return _context.Tournaments.Where(t => t.UserId == userId)
+                .Include(b => b.Players);
         }
 
         public Match GetMatch(Guid id)
@@ -95,6 +96,41 @@ namespace szedarserver.Core.Repositories
                 _context.Results.Add(result);
             }
 
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddOpenTournamentWithPlayers(Tournament tournament, IEnumerable<Player> players)
+        {
+            _context.Tournaments.Add(tournament);
+            foreach (var player in players)
+            {
+                _context.Players.Add(player);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public Tournament GetTournamentWithPlayers(Guid tournamentId)
+        {
+            return _context.Tournaments.Where(t => t.Id == tournamentId)
+                .Include(p => p.Players).SingleOrDefault();
+        }
+
+        public async Task StartTournament(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results)
+        {
+            tournament.Open = false;
+            
+            foreach (var match in matches)
+            {
+                _context.Add(match);
+            }
+
+            foreach (var result in results)
+            {
+                _context.Results.Add(result);
+            }
+
+            _context.Tournaments.Update(tournament);
+            
             await _context.SaveChangesAsync();
         }
     }

@@ -11,6 +11,7 @@ namespace szedarserver.Core.Domain.Context
         {
 
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Match> Matches { get; set; }

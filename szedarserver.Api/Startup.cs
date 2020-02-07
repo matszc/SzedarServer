@@ -65,9 +65,10 @@ namespace szedarserver.Api
                 options.AddPolicy(MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000");
+                        builder.WithOrigins("http://localhost:3000", "https://szedar.firebaseapp.com/", "https://szedar.web.app/");
                         builder.AllowAnyHeader();
                         builder.AllowAnyMethod();
+                        builder.AllowCredentials();
                     });
             });
 

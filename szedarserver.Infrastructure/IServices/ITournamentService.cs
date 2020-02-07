@@ -18,6 +18,9 @@ namespace szedarserver.Infrastructure.IServices
 
         IEnumerable<NodeDTO> GetFlatStructure(Tournament tournament);
 
+        TournamentParts StartUpperTree(Tournament tournament);
+
         Task UpdateSingleEliminationTree(MatchDTO match);
+        Task CreateOpenTournament(RegisterTournamentModel tournament, Guid userId);
     }
 }

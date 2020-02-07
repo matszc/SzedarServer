@@ -69,15 +69,54 @@ namespace szedarserver.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("create/open")]
+        [Authorize]
+        public async Task<IActionResult> CreateOpenTournament([FromBody] RegisterTournamentModel tournament)
+        {
+            await _tournamentService.CreateOpenTournament(tournament, UserId);
+            return Ok();
+        }
+
+        [HttpPost("start/{id}")]
+        [Authorize]
+
+        public async Task<IActionResult> StartTournament(Guid id)
+        {
+            var tournament = _tournamentRepository.GetTournamentWithPlayers(id);
+            if (tournament.UserId != UserId)
+            {
+                return Forbid("Your not owner of this tournament");
+            }
+
+            switch (tournament.Type)
+            {
+                case TournamentsTypes.Siwss:
+                {
+                    await _swissService.StartTournament(tournament);
+                    break;
+                }
+                case TournamentsTypes.DoubleElimination:
+                {
+                    await _doubleEliminationService.StartTournament(tournament);
+                    break;
+                }
+                case TournamentsTypes.SingleElimination:
+                {
+                    await _singleEliminationService.StartTournament(tournament);
+                    break;
+                }
+                default:
+                    return BadRequest();
+            }
+            
+            
+            return Ok();
+        }
+
         [HttpGet("GetAll")]
         [Authorize]
         public IActionResult GetAllUserTournaments()
         {
-            if (UserId == Guid.Empty)
-            {
-                return Unauthorized();
-            }
-
             var res = _tournamentService.GetAllUserTournaments(UserId);
 
             return Ok(res);

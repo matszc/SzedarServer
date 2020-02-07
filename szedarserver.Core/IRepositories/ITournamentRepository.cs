@@ -21,6 +21,10 @@ namespace szedarserver.Core.IRepositories
         Task DeleteResult(Result result);
 
         Task AddResultsAsync(IEnumerable<Result> results);
+        Task AddOpenTournamentWithPlayers(Tournament tournament, IEnumerable<Player> players);
+
+        Tournament GetTournamentWithPlayers(Guid tournamentId);
+        Task StartTournament(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results);
 
     }
 }

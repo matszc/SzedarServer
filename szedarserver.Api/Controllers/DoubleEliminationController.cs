@@ -66,7 +66,7 @@ namespace szedarserver.Api.Controllers
         {
             var tournament = _tournamentRepository.GetRawTournament(id);
 
-            if (tournament == null || tournament.Type != TournamentsTypes.DoubleElimination)
+            if (tournament == null || tournament.Type != TournamentsTypes.DoubleElimination || tournament.Open)
             {
                 return false;
             }

@@ -35,7 +35,7 @@ namespace szedarserver.Api.Controllers
             var guid = Guid.Parse(id);
             var tournament = _tournamentRepository.GetRawTournament(guid);
 
-            if (tournament == null || tournament.Type != TournamentsTypes.Siwss)
+            if (tournament == null || tournament.Type != TournamentsTypes.Siwss || tournament.Open)
             {
                 return NotFound();
             }

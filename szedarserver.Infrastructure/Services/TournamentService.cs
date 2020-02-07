@@ -33,7 +33,9 @@ namespace szedarserver.Infrastructure.Services
 
             foreach (var tournament in tournaments)
             {
-                res.Add(_mapper.Map<TournamentDTO>(tournament));
+                var item = _mapper.Map<TournamentDTO>(tournament);
+                item.NumberOfPlayers = tournament.Players.Count();
+                res.Add(item);
             }
 
             return res.OrderBy(r => r.CreationDate).Reverse();
@@ -142,14 +144,74 @@ namespace szedarserver.Infrastructure.Services
             return res;
         }
 
+        public TournamentParts StartUpperTree(Tournament tournament)
+        {
+
+            var matches = CreateMatches(tournament.Players.Count(), tournament.Id);
+            
+            var results = new List<Result>();
+            
+            foreach (var player in tournament.Players)
+            {
+                results.Add(new Result()
+                {
+                    PlayerId = player.Id,
+                    Score = 0,
+                    Win = false,
+                });
+            }
+
+            var firstRoundIds = matches.Where(m => m.Round == 1).Select(m => m.Id).ToList();
+
+            foreach (var result in results)
+            {
+                var match = firstRoundIds.FirstOrDefault(m => !results.Where(r => m == r.MatchId).ToList().Any());
+
+                if (match != Guid.Empty)
+                {
+                    result.MatchId = match;
+                }
+                else
+                {
+                    match = firstRoundIds.First(m => results.Where(r => m == r.MatchId).ToList().Count == 1);
+                    result.MatchId = match;
+                }
+            }
+            
+            var newResults = new List<Result>();
+
+            foreach (var result in results)
+            {
+                var otherResult = results.Where(r => r.MatchId == result.MatchId).ToList();
+
+                if (otherResult.Count() < 2)
+                {
+                    result.Score = 1;
+                    result.Win = true;
+                    var matchCode = matches.Single(m => m.Id == result.MatchId).NextMachCode;
+                    var matchId = matches.Single(m => m.MatchCode == matchCode).Id;
+                    newResults.Add(new Result(result.PlayerId, matchId));
+                }
+
+                matches.First(m => m.Id == result.MatchId).EditAble = false;
+            }
+            
+            return new TournamentParts()
+            {
+                Matches = matches,
+                Results = results.Concat(newResults),
+            };
+        }
+
         public async Task UpdateSingleEliminationTree(MatchDTO matchDto)
         {
             var match = _tournamentRepository.GetMatch(matchDto.Id);
             
             var nextMatch = _treeRepository.GetMatchByCode(match.NextMachCode, match.TournamentId);
             
-            if (match.Result.Count() != 2 || matchDto.Player1Score == matchDto.Player2Score
-                                          || (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.Win) != null))
+            if (nextMatch != null && (match.Result.Count() != 2 || matchDto.Player1Score == matchDto.Player2Score
+                                           || nextMatch.Result != null &&
+                                           nextMatch.Result.SingleOrDefault(r => r.Win) != null))
             {
                 throw new ValidationException("Can't update this match");
             }
@@ -166,14 +228,45 @@ namespace szedarserver.Infrastructure.Services
 
             var winner = matchDto.Player1Score > matchDto.Player2Score ? p1 : p2;
 
-            if (nextMatch.Result != null && nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null)
+            if (nextMatch != null && (nextMatch.Result != null &&
+                 nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null))
             {
                 await _tournamentRepository.DeleteResult(nextMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
             }
-            
-            var result = new Result(winner.PlayerId, nextMatch.Id){};
 
-            await _tournamentRepository.AddResult(result);
+            if (nextMatch != null)
+            {
+                var result = new Result(winner.PlayerId, nextMatch.Id); 
+                await _tournamentRepository.AddResult(result);
+            }
+        }
+
+        public async Task CreateOpenTournament(RegisterTournamentModel tournamentModel, Guid userId)
+        {
+            if (tournamentModel.Type == TournamentsTypes.Siwss)
+            {
+                var tournament = new Tournament(tournamentModel.Name, tournamentModel.Rounds, userId, tournamentModel.Type,
+                    tournamentModel.MaxNumberOfPlayers, tournamentModel.GameType, tournamentModel.Address, tournamentModel.City,
+                    tournamentModel.StartDate);
+                var players = new List<Player>();
+                    foreach (var player in tournamentModel.Players)
+                    {
+                        players.Add(new Player(player, tournament));
+                    }
+                    await _tournamentRepository.AddOpenTournamentWithPlayers(tournament, players);
+            }
+            else
+            {
+                var tournament = new Tournament(tournamentModel.Name, userId, tournamentModel.Type,
+                    tournamentModel.MaxNumberOfPlayers, tournamentModel.GameType, tournamentModel.Address, tournamentModel.City,
+                    tournamentModel.StartDate);
+                var players = new List<Player>();
+                foreach (var player in tournamentModel.Players)
+                {
+                    players.Add(new Player(player, tournament));
+                }
+                await _tournamentRepository.AddOpenTournamentWithPlayers(tournament, players);
+            }
         }
 
         private NodeDTO CreateNode(Tournament tournament, string matchCode, bool recursionFlag)
