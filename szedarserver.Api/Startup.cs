@@ -20,6 +20,7 @@ using szedarserver.Core.IRepositories;
 using szedarserver.Core.Repositories;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using szedarserver.Api.Hubs;
 using szedarserver.Infrastructure.Extensions;
 using szedarserver.Infrastructure.MappingProfile;
 using szedarserver.Infrastructure.Setting;
@@ -50,6 +51,7 @@ namespace szedarserver.Api
             services.AddTransient<ITreeRepository, TreeRepository>();
             services.AddTransient<IDoubleEliminationService, DoubleEliminationService>();
             services.AddControllers();
+            services.AddSignalR();
             services.AddDbContextPool<DataBaseContext>(
                 optionsBuilder => optionsBuilder.UseSqlServer(Configuration.GetConnectionString("SzedarDBConnection"), 
                 b => b.MigrationsAssembly("szedarserver.Api")));
@@ -114,6 +116,7 @@ namespace szedarserver.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }
