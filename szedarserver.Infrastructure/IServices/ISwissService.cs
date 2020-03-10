@@ -13,7 +13,7 @@ namespace szedarserver.Infrastructure.IServices
         SwissDTO GetTournamentData(Guid tournamentId);
         Task AddResultAsync(Guid matchId, MatchDTO match);
 
-        Task MoveNextRound(Guid tournamentId);
-        Task StartTournament(Tournament tournament);
+        Task MoveNextRoundAsync(Guid tournamentId);
+        Task StartTournamentAsync(Tournament tournament);
     }
 }

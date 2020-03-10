@@ -79,10 +79,10 @@ namespace szedarserver.Infrastructure.Services
             return res;
         }
 
-        public async Task JoinTournament(Guid userId, Tournament tournament)
+        public async Task JoinTournamentAsync(Guid userId, Tournament tournament)
         {
             var user = _userRepository.GetUserById(userId);
-            await _userRepository.AddPlayerToTournament(new Player(user.Login, tournament, userId));
+            await _userRepository.AddPlayerToTournamentAsync(new Player(user.Login, tournament, userId));
         }
 
         public IEnumerable<RankingDTO> GetPlayersRanking(Guid userId)

@@ -27,12 +27,6 @@
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
-        <e p="mono_crash.mem.12588.1.blob" t="Include" />
-        <e p="mono_crash.mem.16897.1.blob" t="Include" />
-        <e p="mono_crash.mem.22656.1.blob" t="Include" />
-        <e p="mono_crash.mem.5155.1.blob" t="Include" />
-        <e p="mono_crash.mem.7511.1.blob" t="Include" />
-        <e p="mono_crash.mem.9458.1.blob" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.0" t="Include">
@@ -83,6 +77,8 @@
           <e p="DoubleEliminationDTO.cs" t="Include" />
           <e p="MatchDTO.cs" t="Include" />
           <e p="NodeDTO.cs" t="Include" />
+          <e p="OpenTournamentDTO.cs" t="Include" />
+          <e p="PlayerDTO.cs" t="Include" />
           <e p="ProfileDTO.cs" t="Include" />
           <e p="RankingDTO.cs" t="Include" />
           <e p="RoundDTO.cs" t="Include" />

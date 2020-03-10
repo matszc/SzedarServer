@@ -28,5 +28,12 @@ namespace szedarserver.Core.Domain
             Id = Guid.NewGuid();
             UserId = userId;
         }
+
+        public Player(string nick, Guid tournamentId)
+        {
+            Nick = nick;
+            TournamentId = tournamentId;
+            Id = Guid.NewGuid();
+        }
     }
 }

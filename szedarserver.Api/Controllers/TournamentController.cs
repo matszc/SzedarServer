@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using szedarserver.Core.Domain;
 using szedarserver.Core.IRepositories;
+using szedarserver.Infrastructure.DTO;
 using szedarserver.Infrastructure.IServices;
 using szedarserver.Infrastructure.Models;
 
@@ -39,19 +40,19 @@ namespace szedarserver.Api.Controllers
 
         [HttpPost("create")]
         [Authorize]
-        public async Task<IActionResult> CreateTournament([FromBody] RegisterTournamentModel tournament)
+        public async Task<IActionResult> CreateTournamentAsync([FromBody] RegisterTournamentModel tournament)
         {
             Tournament res = null;
             switch (tournament.Type)
             {
                 case TournamentsTypes.DoubleElimination:
                 {
-                    res = await _doubleEliminationService.CreateDoubleElimination(tournament, UserId);
+                    res = await _doubleEliminationService.CreateDoubleEliminationAsync(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.SingleElimination:
                 {
-                    res = await _singleEliminationService.CreateSingleEliminationTournament(tournament, UserId);
+                    res = await _singleEliminationService.CreateSingleEliminationTournamentAsync(tournament, UserId);
                     break;
                 }
                 case TournamentsTypes.Siwss:
@@ -71,16 +72,16 @@ namespace szedarserver.Api.Controllers
 
         [HttpPost("create/open")]
         [Authorize]
-        public async Task<IActionResult> CreateOpenTournament([FromBody] RegisterTournamentModel tournament)
+        public async Task<IActionResult> CreateOpenTournamentAsync([FromBody] RegisterTournamentModel tournament)
         {
-            await _tournamentService.CreateOpenTournament(tournament, UserId);
+            await _tournamentService.CreateOpenTournamentAsync(tournament, UserId);
             return Ok();
         }
 
         [HttpPost("start/{id}")]
         [Authorize]
 
-        public async Task<IActionResult> StartTournament(Guid id)
+        public async Task<IActionResult> StartTournamentAsync(Guid id)
         {
             var tournament = _tournamentRepository.GetTournamentWithPlayers(id);
             if (tournament.UserId != UserId)
@@ -92,17 +93,17 @@ namespace szedarserver.Api.Controllers
             {
                 case TournamentsTypes.Siwss:
                 {
-                    await _swissService.StartTournament(tournament);
+                    await _swissService.StartTournamentAsync(tournament);
                     break;
                 }
                 case TournamentsTypes.DoubleElimination:
                 {
-                    await _doubleEliminationService.StartTournament(tournament);
+                    await _doubleEliminationService.StartTournamentAsync(tournament);
                     break;
                 }
                 case TournamentsTypes.SingleElimination:
                 {
-                    await _singleEliminationService.StartTournament(tournament);
+                    await _singleEliminationService.StartTournamentAsync(tournament);
                     break;
                 }
                 default:
@@ -121,5 +122,79 @@ namespace szedarserver.Api.Controllers
 
             return Ok(res);
         }
+
+        [HttpPost("addPlayers/{id}")]
+        [Authorize]
+        public async Task<IActionResult> AddPlayersAsync(Guid id, [FromBody] string[] players)
+        {
+            var tournament = _tournamentRepository.GetRawTournament(id);
+            if (UserId != tournament.UserId)
+            {
+                return Forbid();
+            }
+
+            await _tournamentService.AddPlayersAsync(players, tournament.Id);
+            
+            return Ok();
+        }
+
+        [HttpDelete("deletePlayer/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeletePlayersAsync(Guid id, Guid playerId)
+        {
+            var tournament = _tournamentRepository.GetRawTournament(id);
+            if (UserId != tournament.UserId)
+            {
+                return Forbid();
+            }
+
+            if (!tournament.Open)
+            {
+                return BadRequest();
+            }
+
+            await _tournamentRepository.RemovePlayerAsync(playerId, id);
+
+            return Ok();
+        }
+
+        [HttpGet("getOpenTournament/{id}")]
+        [Authorize]
+
+        public IActionResult GetOpenTournament(Guid id)
+        {
+            var tournament = _tournamentRepository.GetRawTournament(id);
+            if (UserId != tournament.UserId)
+            {
+                return Forbid();
+            }
+            if (!tournament.Open)
+            {
+                return BadRequest();
+            }
+
+
+            return Ok(_tournamentService.GetOpenTorTournament(id));
+        }
+
+        [HttpPatch("editOpenTournament/{id}")]
+        [Authorize]
+        public async Task<IActionResult> EditOpenTournamentAsync([FromRoute] Guid id, [FromBody] OpenTournamentDTO tournament)
+        {
+            var t = _tournamentRepository.GetRawTournament(id);
+            if (UserId != t.UserId)
+            {
+                return Forbid();
+            }
+            if (!t.Open)
+            {
+                return BadRequest();
+            }
+
+            await _tournamentService.UpdateOpenTournamentAsync(id, tournament);
+
+            return Ok();
+        }
+        
     }
 }

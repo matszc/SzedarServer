@@ -14,17 +14,22 @@ namespace szedarserver.Core.IRepositories
         Match GetMatch(Guid id);
 
         Tournament GetRawTournament(Guid id);
-        Task UpdateResult(Result result1, Result result2);
+        Task UpdateResultAsync(Result result1, Result result2);
 
-        Task AddResult(Result result);
+        Task AddResultAsync(Result result);
 
-        Task DeleteResult(Result result);
+        Task DeleteResultAsync(Result result);
 
         Task AddResultsAsync(IEnumerable<Result> results);
-        Task AddOpenTournamentWithPlayers(Tournament tournament, IEnumerable<Player> players);
+        Task AddOpenTournamentWithPlayersAsync(Tournament tournament, IEnumerable<Player> players);
 
         Tournament GetTournamentWithPlayers(Guid tournamentId);
-        Task StartTournament(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results);
+        Task StartTournamentAsync(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results);
+
+        Task AddPlayersToTournamentAsync(IEnumerable<Player> players);
+        Task RemovePlayerAsync(Guid playerId, Guid tournamentId);
+
+        Task UpdateOpenTournamentAsync(Guid tournamentId, Tournament tournament);
 
     }
 }

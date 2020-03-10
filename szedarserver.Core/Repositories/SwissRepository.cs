@@ -17,7 +17,7 @@ namespace szedarserver.Core.Repositories
             _context = context;
         }
 
-        public async Task AddMatches(IEnumerable<Match> matches, IEnumerable<Result> results)
+        public async Task AddMatchesAsync(IEnumerable<Match> matches, IEnumerable<Result> results)
         {
             foreach (var match in matches)
             {
@@ -32,7 +32,7 @@ namespace szedarserver.Core.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task MoveNextRound(Guid tournamentId, int currentRound)
+        public async Task MoveNextRoundAsync(Guid tournamentId, int currentRound)
         {
             await _context.Matches.Where(m => m.Id == tournamentId && m.Round == currentRound).ForEachAsync(m => m.EditAble = false);
 

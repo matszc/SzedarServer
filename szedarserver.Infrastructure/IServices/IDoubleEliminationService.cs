@@ -9,9 +9,9 @@ namespace szedarserver.Infrastructure.IServices
 {
     public interface IDoubleEliminationService
     {
-        Task<Tournament> CreateDoubleElimination(RegisterTournamentModel form, Guid userId);
+        Task<Tournament> CreateDoubleEliminationAsync(RegisterTournamentModel form, Guid userId);
         IEnumerable<NodeDTO> GetMatches(Guid tournamentId);
-        Task AddResult(Guid matchId, MatchDTO match);
-        Task StartTournament(Tournament tournament);
+        Task AddResultAsync(Guid matchId, MatchDTO match);
+        Task StartTournamentAsync(Tournament tournament);
     }
 }

@@ -85,7 +85,7 @@ namespace szedarserver.Core.Repositories
             }
         }
 
-        public async Task<Guid> GetUserIdByMatchId(Guid id)
+        public async Task<Guid> GetUserIdByMatchIdAsync(Guid id)
         {
             var match =  await _context.Matches.SingleOrDefaultAsync(m => m.Id == id);
             var tournament = await _context.Tournaments.SingleAsync(t => t.Id == match.TournamentId);
@@ -104,7 +104,7 @@ namespace szedarserver.Core.Repositories
                 .Include(p => p.Players).ToList();
         }
 
-        public async Task AddPlayerToTournament(Player player)
+        public async Task AddPlayerToTournamentAsync(Player player)
         {
             _context.Players.Add(player);
             await _context.SaveChangesAsync();
@@ -133,7 +133,7 @@ namespace szedarserver.Core.Repositories
                 .ThenInclude(s => s.Player).ToList();
         }
 
-        public async Task DeletePlayer(Guid tournamentId, Guid userId)
+        public async Task DeletePlayerAsync(Guid tournamentId, Guid userId)
         {
             var p = await _context.Players.SingleAsync(p => p.UserId == userId && p.TournamentId == tournamentId);
             _context.Players.Remove(p);

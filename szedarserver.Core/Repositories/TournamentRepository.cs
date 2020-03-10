@@ -69,7 +69,7 @@ namespace szedarserver.Core.Repositories
             return _context.Tournaments.SingleOrDefault(t => t.Id == id);
         }
 
-        public async Task UpdateResult(Result result1, Result result2)
+        public async Task UpdateResultAsync(Result result1, Result result2)
         {
             _context.Results.Update(result1);
             _context.Results.Update(result2);
@@ -77,13 +77,13 @@ namespace szedarserver.Core.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddResult(Result result)
+        public async Task AddResultAsync(Result result)
         {
             _context.Results.Add(result);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteResult(Result result)
+        public async Task DeleteResultAsync(Result result)
         {
             _context.Results.Remove(result);
             await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace szedarserver.Core.Repositories
 
             await _context.SaveChangesAsync();
         }
-        public async Task AddOpenTournamentWithPlayers(Tournament tournament, IEnumerable<Player> players)
+        public async Task AddOpenTournamentWithPlayersAsync(Tournament tournament, IEnumerable<Player> players)
         {
             _context.Tournaments.Add(tournament);
             foreach (var player in players)
@@ -115,7 +115,7 @@ namespace szedarserver.Core.Repositories
                 .Include(p => p.Players).SingleOrDefault();
         }
 
-        public async Task StartTournament(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results)
+        public async Task StartTournamentAsync(Tournament tournament, IEnumerable<Match> matches, IEnumerable<Result> results)
         {
             tournament.Open = false;
             
@@ -130,6 +130,34 @@ namespace szedarserver.Core.Repositories
             }
 
             _context.Tournaments.Update(tournament);
+            
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddPlayersToTournamentAsync(IEnumerable<Player> players)
+        {
+            foreach (var player in players)
+            {
+                _context.Players.Add(player);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemovePlayerAsync(Guid playerId, Guid tournamentId)
+        {
+            _context.Players.Remove(_context.Players.Single(p => p.Id == playerId && p.TournamentId == tournamentId));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateOpenTournamentAsync(Guid tournamentId, Tournament tournament)
+        {
+            var t = await _context.Tournaments.SingleAsync(t => t.Id == tournamentId);
+            
+            t.Address = tournament.Address;
+            t.City = tournament.City;
+            t.GameType = tournament.GameType;
+            t.StartDate = tournament.StartDate;
             
             await _context.SaveChangesAsync();
         }

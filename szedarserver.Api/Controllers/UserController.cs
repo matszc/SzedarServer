@@ -28,13 +28,13 @@ namespace szedarserver.Api.Controllers
             _tournamentRepository = tournamentRepository;
         }
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] UserRegisterModel user)
+        public async Task<ActionResult> RegisterAsync([FromBody] UserRegisterModel user)
         {
             await _userService.RegisterAsync(user);
             return Ok();
         }
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginModel loginData)
+        public async Task<ActionResult> LoginAsync([FromBody] LoginModel loginData)
         {
             var res = await _userService.LoginAsync(loginData);
             if(res == null)
@@ -45,7 +45,7 @@ namespace szedarserver.Api.Controllers
         }
 
         [HttpPost("loginFb")]
-        public async Task<ActionResult> LoginFbUser([FromBody] FbUserModel fbUser)
+        public async Task<ActionResult> LoginFbUserAsync([FromBody] FbUserModel fbUser)
         {
             var res = await _userService.LoginFbAsync(fbUser);
             return Ok(res);
@@ -60,7 +60,7 @@ namespace szedarserver.Api.Controllers
 
         [HttpPost("join/{tournamentId}")]
         [Authorize]
-        public async Task<IActionResult> JoinTournament(Guid tournamentId)
+        public async Task<IActionResult> JoinTournamentAsync(Guid tournamentId)
         {
             var tournament = _tournamentRepository.GetTournamentWithPlayers(tournamentId);
 
@@ -72,7 +72,7 @@ namespace szedarserver.Api.Controllers
                 return Forbid("You can't join this tournament");
             }
 
-            await _userService.JoinTournament(UserId, tournament);
+            await _userService.JoinTournamentAsync(UserId, tournament);
 
             return Ok();
         }
@@ -97,7 +97,7 @@ namespace szedarserver.Api.Controllers
 
         [HttpDelete("join/{id}")]
         [Authorize]
-        public async Task<IActionResult> LeaveTournament(Guid id)
+        public async Task<IActionResult> LeaveTournamentAsync(Guid id)
         {
             var tournament = _tournamentRepository.GetTournamentWithPlayers(id);
             if (tournament.Players.SingleOrDefault(p => p.UserId == UserId) == null)
@@ -105,7 +105,7 @@ namespace szedarserver.Api.Controllers
                 return BadRequest("Users not in tournament");
             }
 
-            await _userRepository.DeletePlayer(tournament.Id, UserId);
+            await _userRepository.DeletePlayerAsync(tournament.Id, UserId);
             
             return Ok();
         }

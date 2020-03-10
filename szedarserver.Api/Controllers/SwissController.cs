@@ -54,9 +54,9 @@ namespace szedarserver.Api.Controllers
         }
 
         [HttpPost("round/{id}")]
-        public async Task<IActionResult> CreateNextRound(string id)
+        public async Task<IActionResult> CreateNextRoundAsync(string id)
         {
-            await _swissService.MoveNextRound(Guid.Parse(id));
+            await _swissService.MoveNextRoundAsync(Guid.Parse(id));
             return Ok();
         }
     }

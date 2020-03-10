@@ -25,7 +25,7 @@ namespace szedarserver.Infrastructure.Services
             _tournamentService = tournamentService;
         }
 
-        public async Task<Tournament> CreateSingleEliminationTournament(RegisterTournamentModel tournamentData,
+        public async Task<Tournament> CreateSingleEliminationTournamentAsync(RegisterTournamentModel tournamentData,
             Guid userId)
         {
 
@@ -48,10 +48,10 @@ namespace szedarserver.Infrastructure.Services
             return _tournamentService.GetFlatStructure(tournament).OrderBy(t => t.MatchCode);
         }
 
-        public async Task StartTournament(Tournament tournament)
+        public async Task StartTournamentAsync(Tournament tournament)
         {
             var tournamentParts = _tournamentService.StartUpperTree(tournament);
-            await _tournamentRepository.StartTournament(tournament, tournamentParts.Matches, tournamentParts.Results);
+            await _tournamentRepository.StartTournamentAsync(tournament, tournamentParts.Matches, tournamentParts.Results);
         }
     }
 }
