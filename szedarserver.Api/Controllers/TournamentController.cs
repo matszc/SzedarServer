@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -127,10 +128,15 @@ namespace szedarserver.Api.Controllers
         [Authorize]
         public async Task<IActionResult> AddPlayersAsync(Guid id, [FromBody] string[] players)
         {
-            var tournament = _tournamentRepository.GetRawTournament(id);
+            var tournament = _tournamentRepository.GetTournamentWithPlayers(id);
             if (UserId != tournament.UserId)
             {
                 return Forbid();
+            }
+
+            if ((tournament.Players.Count() + players.Length) > tournament.MaxNumberOfPlayers)
+            {
+                return BadRequest("Max number of players excited");
             }
 
             await _tournamentService.AddPlayersAsync(players, tournament.Id);
@@ -138,9 +144,9 @@ namespace szedarserver.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("deletePlayer/{id}")]
+        [HttpDelete("deletePlayer/{id}/{playerId}")]
         [Authorize]
-        public async Task<IActionResult> DeletePlayersAsync(Guid id, Guid playerId)
+        public async Task<IActionResult> DeletePlayersAsync([FromRoute]Guid id, [FromRoute]Guid playerId)
         {
             var tournament = _tournamentRepository.GetRawTournament(id);
             if (UserId != tournament.UserId)
@@ -155,6 +161,28 @@ namespace szedarserver.Api.Controllers
 
             await _tournamentRepository.RemovePlayerAsync(playerId, id);
 
+            return Ok();
+        }
+
+        [HttpPatch("editPlayer/{id}/{playerId}/{nick}")]
+        [Authorize]
+        public async Task<IActionResult> EditPlayerAsync([FromRoute] Guid id, [FromRoute] Guid playerId, [FromRoute] string nick)
+        {
+            var t = _tournamentRepository.GetTournamentWithPlayers(id);
+            
+            if (UserId != t.UserId)
+            {
+                return Forbid();
+            }
+
+            var player = t.Players.Single(i => i.Id == playerId);
+            if (player.UserId != Guid.Empty || nick.Length < 2)
+            {
+                return BadRequest();
+            }
+
+            await _tournamentRepository.EditPlayerAsync(playerId, nick);
+            
             return Ok();
         }
 
@@ -192,6 +220,25 @@ namespace szedarserver.Api.Controllers
             }
 
             await _tournamentService.UpdateOpenTournamentAsync(id, tournament);
+
+            return Ok();
+        }
+
+        [HttpDelete("deleteOpenTournament/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CloseOpenTournament(Guid id)
+        {
+            var t = _tournamentRepository.GetRawTournament(id);
+            if (UserId != t.UserId)
+            {
+                return Forbid();
+            }
+            if (!t.Open)
+            {
+                return BadRequest();
+            }
+
+            await _tournamentRepository.CloseOpenTournamentAsync(id);
 
             return Ok();
         }

@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using szedarserver.Infrastructure.Extensions;
 using szedarserver.Core.Domain;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using AutoMapper;
 using szedarserver.Infrastructure.Models;
 using Microsoft.Extensions.Options;
@@ -76,7 +77,9 @@ namespace szedarserver.Infrastructure.Services
                 res.Add(item);
             }
 
-            return res;
+            var dNow = DateTime.UtcNow;
+            
+            return res.FindAll(i => DateTime.Compare(i.StartDate, dNow) > 0);
         }
 
         public async Task JoinTournamentAsync(Guid userId, Tournament tournament)

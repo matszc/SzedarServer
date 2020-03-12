@@ -6,5 +6,6 @@ namespace szedarserver.Infrastructure.DTO
     {
         public string Nick { get; set; }
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
     }
 }

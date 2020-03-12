@@ -31,5 +31,9 @@ namespace szedarserver.Core.IRepositories
 
         Task UpdateOpenTournamentAsync(Guid tournamentId, Tournament tournament);
 
+        Task CloseOpenTournamentAsync(Guid id);
+
+        Task EditPlayerAsync(Guid id, string nick);
+
     }
 }

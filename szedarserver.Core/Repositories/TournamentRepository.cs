@@ -161,5 +161,26 @@ namespace szedarserver.Core.Repositories
             
             await _context.SaveChangesAsync();
         }
+
+        public async Task CloseOpenTournamentAsync(Guid id)
+        {
+            _context.Tournaments.Remove(_context.Tournaments.Single(i => i.Id == id));
+            var players = _context.Players.Where(i => i.TournamentId == id).ToList();
+
+            foreach (var player in players)
+            {
+                _context.Players.Remove(player);
+            }
+            
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditPlayerAsync(Guid id, string nick)
+        {
+            var player = _context.Players.Single(p => p.Id == id);
+            player.Nick = nick;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

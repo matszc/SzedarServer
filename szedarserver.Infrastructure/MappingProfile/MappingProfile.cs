@@ -18,7 +18,7 @@ namespace szedarserver.Infrastructure.MappingProfile
             CreateMap<Tournament, Tournament>();
             CreateMap<Tournament, OpenTournamentDTO>();
             CreateMap<Player, PlayerDTO>();
-            CreateMap<TournamentDTO, Tournament>();
+            CreateMap<OpenTournamentDTO, Tournament>();
         }
     }
 }
