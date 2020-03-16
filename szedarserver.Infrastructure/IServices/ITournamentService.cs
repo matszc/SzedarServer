@@ -20,7 +20,10 @@ namespace szedarserver.Infrastructure.IServices
 
         TournamentParts StartUpperTree(Tournament tournament);
 
-        Task UpdateSingleEliminationTree(MatchDTO match);
-        Task CreateOpenTournament(RegisterTournamentModel tournament, Guid userId);
+        Task UpdateSingleEliminationTreeAsync(MatchDTO match);
+        Task CreateOpenTournamentAsync(RegisterTournamentModel tournament, Guid userId);
+        Task AddPlayersAsync(string[] nicks, Guid tournamentId);
+        OpenTournamentDTO GetOpenTorTournament(Guid tournamentId);
+        Task UpdateOpenTournamentAsync(Guid tournamentId, OpenTournamentDTO tournamentDto);
     }
 }

@@ -203,7 +203,7 @@ namespace szedarserver.Infrastructure.Services
             };
         }
 
-        public async Task UpdateSingleEliminationTree(MatchDTO matchDto)
+        public async Task UpdateSingleEliminationTreeAsync(MatchDTO matchDto)
         {
             var match = _tournamentRepository.GetMatch(matchDto.Id);
             
@@ -224,24 +224,24 @@ namespace szedarserver.Infrastructure.Services
             p2.Score = matchDto.Player2Score;
             p2.Win = matchDto.Player1Score < matchDto.Player2Score;
 
-            await _tournamentRepository.UpdateResult(p1, p2);
+            await _tournamentRepository.UpdateResultAsync(p1, p2);
 
             var winner = matchDto.Player1Score > matchDto.Player2Score ? p1 : p2;
 
             if (nextMatch != null && (nextMatch.Result != null &&
                  nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null))
             {
-                await _tournamentRepository.DeleteResult(nextMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
+                await _tournamentRepository.DeleteResultAsync(nextMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
             }
 
             if (nextMatch != null)
             {
                 var result = new Result(winner.PlayerId, nextMatch.Id); 
-                await _tournamentRepository.AddResult(result);
+                await _tournamentRepository.AddResultAsync(result);
             }
         }
 
-        public async Task CreateOpenTournament(RegisterTournamentModel tournamentModel, Guid userId)
+        public async Task CreateOpenTournamentAsync(RegisterTournamentModel tournamentModel, Guid userId)
         {
             if (tournamentModel.Type == TournamentsTypes.Siwss)
             {
@@ -253,7 +253,7 @@ namespace szedarserver.Infrastructure.Services
                     {
                         players.Add(new Player(player, tournament));
                     }
-                    await _tournamentRepository.AddOpenTournamentWithPlayers(tournament, players);
+                    await _tournamentRepository.AddOpenTournamentWithPlayersAsync(tournament, players);
             }
             else
             {
@@ -265,8 +265,46 @@ namespace szedarserver.Infrastructure.Services
                 {
                     players.Add(new Player(player, tournament));
                 }
-                await _tournamentRepository.AddOpenTournamentWithPlayers(tournament, players);
+                await _tournamentRepository.AddOpenTournamentWithPlayersAsync(tournament, players);
             }
+        }
+
+        public async Task AddPlayersAsync(string[] nicks, Guid tournamentId)
+        {
+            var players = new List<Player>();
+            foreach (var player in nicks)
+            {
+                players.Add(new Player(player, tournamentId));
+            }
+
+            await _tournamentRepository.AddPlayersToTournamentAsync(players);
+
+
+        }
+
+        public OpenTournamentDTO GetOpenTorTournament(Guid tournamentId)
+        {
+            var t = _tournamentRepository.GetTournamentWithPlayers(tournamentId);
+            var res = _mapper.Map <OpenTournamentDTO>(t);
+
+            var players = new List<PlayerDTO>();
+            
+            foreach (var player in t.Players)
+            {
+                players.Add(_mapper.Map<PlayerDTO>(player));
+            }
+
+            res.Players = players;
+
+
+            return res;
+        }
+
+        public async Task UpdateOpenTournamentAsync(Guid tournamentId, OpenTournamentDTO tournamentDto)
+        {
+            var t = _mapper.Map<Tournament>(tournamentDto);
+
+            await _tournamentRepository.UpdateOpenTournamentAsync(tournamentId, t);
         }
 
         private NodeDTO CreateNode(Tournament tournament, string matchCode, bool recursionFlag)

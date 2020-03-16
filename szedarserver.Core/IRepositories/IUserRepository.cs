@@ -14,12 +14,12 @@ namespace szedarserver.Core.IRepositories
         Task<User> GetUserAsync(User user);
         User GetUserById(Guid id);
         Task<User> GetUserByFbIdAsync(string fbId);
-        Task<Guid> GetUserIdByMatchId(Guid id);
+        Task<Guid> GetUserIdByMatchIdAsync(Guid id);
         IEnumerable<Tournament> GetAllTournaments(Guid userId, GameTypes gameType);
-        Task AddPlayerToTournament(Player user);
+        Task AddPlayerToTournamentAsync(Player user);
         List<Player> GetAllUserPlayers(IEnumerable<Guid> userIds);
         List<Tournament> GetAllUserTournaments(Guid userId);
         List<Player> GetAllPlayerByUserId(Guid userId);
-        Task DeletePlayer(Guid tournamentId, Guid userId);
+        Task DeletePlayerAsync(Guid tournamentId, Guid userId);
     }
 }

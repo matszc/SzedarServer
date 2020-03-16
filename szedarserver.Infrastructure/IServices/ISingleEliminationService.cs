@@ -9,8 +9,8 @@ namespace szedarserver.Infrastructure.IServices
 {
     public interface ISingleEliminationService
     {
-        Task<Tournament> CreateSingleEliminationTournament(RegisterTournamentModel tournamentData,  Guid userId);
+        Task<Tournament> CreateSingleEliminationTournamentAsync(RegisterTournamentModel tournamentData,  Guid userId);
         IEnumerable<NodeDTO> GetFlatStructure (Guid tournamentId);
-        Task StartTournament(Tournament tournament);
+        Task StartTournamentAsync(Tournament tournament);
     }
 }

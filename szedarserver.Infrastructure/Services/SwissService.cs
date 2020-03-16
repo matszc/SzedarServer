@@ -89,10 +89,10 @@ namespace szedarserver.Infrastructure.Services
             res1.Win = match.Player2Score < match.Player1Score;
             res2.Win = match.Player2Score > match.Player1Score;
 
-            await _tournamentRepository.UpdateResult(res1, res2);
+            await _tournamentRepository.UpdateResultAsync(res1, res2);
         }
 
-        public async Task MoveNextRound(Guid tournamentId)
+        public async Task MoveNextRoundAsync(Guid tournamentId)
         {
             var tournament = _tournamentRepository.GetTournament(tournamentId);
 
@@ -104,15 +104,15 @@ namespace szedarserver.Infrastructure.Services
             var swissTable = CreateSwissTable(tournament);
             var nextRound = GenerateNextRound(tournament, swissTable);
 
-            await _swissRepository.AddMatches(nextRound.Matches, nextRound.Results);
-            await _swissRepository.MoveNextRound(tournamentId, tournament.CurrentRound);
+            await _swissRepository.AddMatchesAsync(nextRound.Matches, nextRound.Results);
+            await _swissRepository.MoveNextRoundAsync(tournamentId, tournament.CurrentRound);
         }
 
-        public async Task StartTournament(Tournament tournament)
+        public async Task StartTournamentAsync(Tournament tournament)
         {
             var t = _mapper.Map<Tournament>(tournament);
             var firstRound = GenerateFirstRound(t);
-            await _tournamentRepository.StartTournament(tournament, firstRound.Matches, firstRound.Results);
+            await _tournamentRepository.StartTournamentAsync(tournament, firstRound.Matches, firstRound.Results);
         }
 
         private IEnumerable<RoundDTO> GetRounds(Tournament tournament)

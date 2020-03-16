@@ -29,7 +29,7 @@ namespace szedarserver.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<Tournament> CreateDoubleElimination(RegisterTournamentModel form, Guid userId)
+        public async Task<Tournament> CreateDoubleEliminationAsync(RegisterTournamentModel form, Guid userId)
         {
             var upperBracket = _tournamentService.CreateUpperTree(form, userId);
 
@@ -95,14 +95,14 @@ namespace szedarserver.Infrastructure.Services
             return _tournamentService.GetFlatStructure(tournament);
         }
 
-        public async Task AddResult(Guid matchId, MatchDTO result)
+        public async Task AddResultAsync(Guid matchId, MatchDTO result)
         {
             var match = _tournamentRepository.GetMatch(matchId);
             var allMatches = _treeRepository.GetAllMatches(match.TournamentId);
 
             if (match.NextLoserMatchCode == null && (match.MatchCode != "Final1" && match.MatchCode != "Final2"))
             {
-                await _tournamentService.UpdateSingleEliminationTree(result);
+                await _tournamentService.UpdateSingleEliminationTreeAsync(result);
                 return;
             }
 
@@ -133,7 +133,7 @@ namespace szedarserver.Infrastructure.Services
             if (nextMatch != null && nextMatch.Result != null &&
                 nextMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) != null)
             {
-                await _tournamentRepository.DeleteResult(nextMatch.Result.Single(r =>
+                await _tournamentRepository.DeleteResultAsync(nextMatch.Result.Single(r =>
                     r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
             }
 
@@ -141,7 +141,7 @@ namespace szedarserver.Infrastructure.Services
                 nextLoserMatch.Result.SingleOrDefault(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId) !=
                 null)
             {
-                await _tournamentRepository.DeleteResult(
+                await _tournamentRepository.DeleteResultAsync(
                     nextLoserMatch.Result.Single(r => r.PlayerId == p1.PlayerId || r.PlayerId == p2.PlayerId));
             }
 
@@ -150,19 +150,19 @@ namespace szedarserver.Infrastructure.Services
                 if (winner.Player.Nick == result.FromLowerBracket)
                 {
                     var final2 = allMatches.Single(m => m.MatchCode == "Final2");
-                    await _tournamentRepository.UpdateResult(p1, p2);
+                    await _tournamentRepository.UpdateResultAsync(p1, p2);
                     await _tournamentRepository.AddResultsAsync(new List<Result>()
                         {new Result(p1.PlayerId, final2.Id), new Result(p2.PlayerId, final2.Id)});
                 }
                 else
                 {
-                    await _tournamentRepository.UpdateResult(p1, p2);
+                    await _tournamentRepository.UpdateResultAsync(p1, p2);
                 }
 
                 return;
             }
 
-            await _tournamentRepository.UpdateResult(p1, p2);
+            await _tournamentRepository.UpdateResultAsync(p1, p2);
 
             if (nextMatch == null || nextLoserMatch == null)
             {
@@ -186,7 +186,7 @@ namespace szedarserver.Infrastructure.Services
             }
         }
 
-        public async Task StartTournament(Tournament tournamentOriginal)
+        public async Task StartTournamentAsync(Tournament tournamentOriginal)
         {
             var tournament = _mapper.Map<Tournament>(tournamentOriginal);
             var upperBracket = _tournamentService.StartUpperTree(tournament);
@@ -236,7 +236,7 @@ namespace szedarserver.Infrastructure.Services
 
             var allMatches = upperBracket.Matches.Concat(lowerMatches).Concat(finalMatches);
 
-            await _tournamentRepository.StartTournament(tournamentOriginal,
+            await _tournamentRepository.StartTournamentAsync(tournamentOriginal,
                 allMatches,
                 upperBracket.Results);
         }

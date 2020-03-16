@@ -46,9 +46,9 @@ namespace szedarserver.Api.Controllers
 
         [HttpPost("match/{id}")]
         [Authorize]
-        public async Task<IActionResult> AddResult(Guid id, [FromBody] MatchDTO match)
+        public async Task<IActionResult> AddResultAsync(Guid id, [FromBody] MatchDTO match)
         {
-            var ownerId = _userRepository.GetUserIdByMatchId(id);
+            var ownerId = _userRepository.GetUserIdByMatchIdAsync(id);
             if (ownerId.Result != UserId)
             {
                 return Forbid();
@@ -58,7 +58,7 @@ namespace szedarserver.Api.Controllers
                 return BadRequest("Match can't be draw");
             }
 
-            await _doubleEliminationService.AddResult(id, match);
+            await _doubleEliminationService.AddResultAsync(id, match);
             return Ok();
         }
         

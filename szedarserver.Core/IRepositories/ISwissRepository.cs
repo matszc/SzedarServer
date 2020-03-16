@@ -7,8 +7,8 @@ namespace szedarserver.Core.IRepositories
 {
     public interface ISwissRepository
     {
-        Task AddMatches(IEnumerable<Match> matches, IEnumerable<Result> results);
+        Task AddMatchesAsync(IEnumerable<Match> matches, IEnumerable<Result> results);
 
-        Task MoveNextRound(Guid tournamentId, int currentRound);
+        Task MoveNextRoundAsync(Guid tournamentId, int currentRound);
     }
 }
