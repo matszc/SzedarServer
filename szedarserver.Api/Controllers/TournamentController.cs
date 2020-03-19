@@ -219,6 +219,8 @@ namespace szedarserver.Api.Controllers
                 return BadRequest();
             }
 
+            tournament.StartDate = tournament.StartDate.AddHours(2);
+
             await _tournamentService.UpdateOpenTournamentAsync(id, tournament);
 
             return Ok();
